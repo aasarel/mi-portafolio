@@ -1,0 +1,117 @@
+---
+interface Props {
+  label: string;
+  description?: string;
+  tag?: string;
+}
+
+const { label, description, tag } = Astro.props;
+---
+
+<div class="metric-card-wrapper relative w-full">
+
+  <button
+    class="metric-open-btn group/card relative w-full text-left p-6 bg-bg-secondary/40 rounded-xl border border-text-primary/5 flex flex-col justify-between min-h-[200px] shadow-sm hover:-translate-y-2 hover:shadow-[0_16px_40px_rgba(0,0,0,0.10)] hover:border-text-primary/10 transition-[transform,box-shadow,border-color] duration-1000 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-text-accent/50"
+    aria-label={`Ver más sobre ${label}`}
+  >
+    <div class="flex justify-end text-text-primary/[0.07] pointer-events-none select-none">
+      <span class="text-5xl">m</span>
+    </div>
+    
+
+
+    <div class="flex items-end justify-between gap-4 mt-auto">
+      <h4 class="font-display font-semibold text-[17px] leading-[23px] text-text-primary/70 tracking-tight">
+        {label}
+      </h4>
+      <span
+        aria-hidden="true"
+        class="shrink-0 w-9 h-9 rounded-full bg-text-accent flex items-center justify-center text-bg-primary"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" width="16" height="16" fill="currentColor" aria-hidden="true">
+          <path d="M16 8.5h-4.5V4a1.5 1.5 0 0 0-3 0v4.5H4a1.5 1.5 0 0 0 0 3h4.5V16a1.5 1.5 0 0 0 3 0v-4.5H16a1.5 1.5 0 0 0 0-3z"/>
+        </svg>
+      </span>
+    </div>
+  </button>
+
+  <div
+    class="metric-modal fixed inset-0 z-[100] flex items-center justify-center p-6 pointer-events-none"
+    role="dialog"
+    aria-modal="true"
+    aria-label={label}
+  >
+    <div class="metric-backdrop absolute inset-0 bg-black/40 backdrop-blur-sm opacity-0 transition-opacity duration-300"></div>
+
+    <div class="metric-panel relative bg-bg-primary rounded-2xl p-8 max-w-[480px] w-full shadow-2xl opacity-0 translate-y-3 transition-all duration-300">
+
+      <button
+        class="metric-close-btn absolute top-4 right-4 w-8 h-8 rounded-full bg-bg-secondary flex items-center justify-center text-text-primary/50 hover:text-text-primary transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-text-accent/50"
+        aria-label="Cerrar"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="12" height="12" fill="currentColor" aria-hidden="true">
+          <path d="M2.22 2.22a.75.75 0 011.06 0L8 6.94l4.72-4.72a.75.75 0 111.06 1.06L9.06 8l4.72 4.72a.75.75 0 11-1.06 1.06L8 9.06l-4.72 4.72a.75.75 0 01-1.06-1.06L6.94 8 2.22 3.28a.75.75 0 010-1.06z"/>
+        </svg>
+      </button>
+
+      {tag && (
+        <span class="font-mono text-[10px] uppercase tracking-[0.2em] text-text-accent font-medium block mb-3">
+          {tag}
+        </span>
+      )}
+
+      <h3 class="font-display font-bold text-2xl md:text-[28px] leading-tight text-text-primary mb-4 pr-10">
+        {label}
+      </h3>
+
+      {description && (
+        <p class="font-sans text-[15px] leading-[26px] text-text-primary/70">{description}</p>
+      )}
+
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function initMetricCards() {
+    document.querySelectorAll('.metric-card-wrapper').forEach(wrapper => {
+      const openBtn  = wrapper.querySelector('.metric-open-btn');
+      const modal    = wrapper.querySelector('.metric-modal')    as HTMLElement;
+      const backdrop = wrapper.querySelector('.metric-backdrop') as HTMLElement;
+      const panel    = wrapper.querySelector('.metric-panel')    as HTMLElement;
+      const closeBtn = wrapper.querySelector('.metric-close-btn');
+
+      if (!modal || !backdrop || !panel) return;
+
+      const isOpen = () => !modal.classList.contains('pointer-events-none');
+
+      const open = () => {
+        modal.classList.remove('pointer-events-none');
+        backdrop.classList.add('opacity-100');
+        panel.classList.remove('opacity-0', 'translate-y-3');
+        document.body.style.overflow = 'hidden';
+      };
+
+      const close = () => {
+        backdrop.classList.remove('opacity-100');
+        panel.classList.add('opacity-0', 'translate-y-3');
+        setTimeout(() => {
+          modal.classList.add('pointer-events-none');
+          document.body.style.overflow = '';
+        }, 300);
+      };
+
+      openBtn?.addEventListener('click', open);
+      closeBtn?.addEventListener('click', (e) => { e.stopPropagation(); close(); });
+      backdrop?.addEventListener('click', close);
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && isOpen()) close();
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', initMetricCards);
+  initMetricCards();
+</script>

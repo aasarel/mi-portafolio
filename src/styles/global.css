@@ -1,0 +1,168 @@
+@import "tailwindcss";
+
+/* ============================================================
+   DESIGN TOKENS — Sistema de Diseño / Figma Variables
+   Portfolio UX & Product Designer
+   Tailwind CSS v4 — @theme inline + dark mode manual (.dark)
+   ============================================================ */
+
+   /* ---------------------------------------------------------------
+    0. FUENTES Cargamos la fuente globalmente para que esté 
+    disponible en todo el proyecto.
+    Registro de tu firma local (.ttf cargado desde la carpeta public)
+   --------------------------------------------------------------- */
+@font-face {
+  font-family: 'Xanas Wedding';
+  src: url('/fonts/xanas-wedding.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+   /* ---------------------------------------------------------------
+    1. VARIABLES CSS PRIMITIVAS (LIght Mode por defecto)
+    Estas son las fuentes de verdad, se spbreescriben en .Dark.
+   --------------------------------------------------------------- */
+
+:root {
+  /* — Fondos — */
+  --color-bg-primary:           #FFFFFF;
+  --color-bg-secondary:         #F5F5F7;
+  --color-bg-tertiary:          #EFEFF1;
+  --color-bg-inverse:           #121214;
+ 
+  /* — Textos — */
+  --color-text-primary:         #121214;
+  --color-text-secondary:       #8E8E93;
+  --color-text-tertiary:        #A1A1A6;
+  --color-text-inverse:         #FFFFFF;
+  --color-text-accent:          #B88A52;
+  --color-text-link:            #5F7490;
+ 
+  /* — Acentuaciones — */
+  --color-accent-forest:        #5E6B5C;
+  --color-accent-amber:         #B88A52;
+  --color-accent-aurora:        #5F7490;
+  --color-accent-burgundy:      #6E4A4A;
+ 
+  /* — Interacciones — */
+  --color-interaction-link:        #121214;
+  --color-interaction-link-hover:  #B88A52;
+  --color-interaction-focus-ring:  #5F7490;
+  --color-interaction-selection:   #B88A52;
+}
+
+  /* ---------------------------------------------------------------
+    2. DARK MODE — se activa con la clase .dark en <html>
+    --------------------------------------------------------------- */
+
+.dark {
+    /* — Fondos — */
+    --color-bg-primary:           #0B0B0C;
+    --color-bg-secondary:         #121214;
+    --color-bg-tertiary:          #1C1C1F;
+    --color-bg-inverse:           #FFFFFF;
+    
+    /* — Textos — */
+    --color-text-primary:         #F5F5F7;
+    --color-text-secondary:       #A1A1A6;
+    --color-text-tertiary:        #7C7C82;
+    --color-text-inverse:         #121214;
+    --color-text-accent:          #C89A61;
+    --color-text-link:            #7188A8;
+    
+    /* — Acentuaciones — */
+    --color-accent-forest:        #6F8570;
+    --color-accent-amber:         #C89A61;
+    --color-accent-aurora:        #7188A8;
+    --color-accent-burgundy:      #8A5C5C;
+    
+    /* — Interacciones — */
+    --color-interaction-link:        #F5F5F7;
+    --color-interaction-link-hover:  #C89A61;
+    --color-interaction-focus-ring:  #7188A8;
+    --color-interaction-selection:   #C89A61;
+}
+ 
+/* ------------------------------------------------------------
+   3. TAILWIND v4 @theme — Mapeo de tokens al sistema de clases
+      Usa "inline" para referenciar las CSS vars de :root/.dark
+   ------------------------------------------------------------ */
+ 
+@theme inline {
+ 
+  /* — Fondos — */
+  --color-bg-primary:           var(--color-bg-primary);
+  --color-bg-secondary:         var(--color-bg-secondary);
+  --color-bg-tertiary:          var(--color-bg-tertiary);
+  --color-bg-inverse:           var(--color-bg-inverse);
+ 
+  /* — Textos — */
+  --color-text-primary:         var(--color-text-primary);
+  --color-text-secondary:       var(--color-text-secondary);
+  --color-text-tertiary:        var(--color-text-tertiary);
+  --color-text-inverse:         var(--color-text-inverse);
+  --color-text-accent:          var(--color-text-accent);
+  --color-text-link:            var(--color-text-link);
+ 
+  /* — Acentuaciones — */
+  --color-accent-forest:        var(--color-accent-forest);
+  --color-accent-amber:         var(--color-accent-amber);
+  --color-accent-aurora:        var(--color-accent-aurora);
+  --color-accent-burgundy:      var(--color-accent-burgundy);
+ 
+  /* — Interacciones — */
+  --color-interaction-link:        var(--color-interaction-link);
+  --color-interaction-link-hover:  var(--color-interaction-link-hover);
+  --color-interaction-focus-ring:  var(--color-interaction-focus-ring);
+  --color-interaction-selection:   var(--color-interaction-selection);
+
+  /* — Tipografías — */
+  --font-display: 'Hanken Grotesk', sans-serif;
+  --font-sans: 'Inter', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --font-signature: 'Xanas Wedding', cursive;
+  
+  /*---------------------------------------------------------------
+     ESPACIADOS — Escala Figma (en px → rem)
+     Base: 1rem = 16px
+  --------------------------------------------------------------- */
+  --spacing-1:   0.25rem;    /*   4px */
+  --spacing-2:   0.5rem;     /*   8px */
+  --spacing-3:   0.75rem;    /*  12px */
+  --spacing-4:   1rem;       /*  16px */
+  --spacing-6:   1.5rem;     /*  24px */
+  --spacing-8:   2rem;       /*  32px */
+  --spacing-12:  3rem;       /*  48px */
+  --spacing-16:  4rem;       /*  64px */
+  --spacing-24:  6rem;       /*  96px */
+  --spacing-32:  8rem;       /* 128px */
+}
+
+  /*---------------------------------------------------------------
+     ALINEAR Y CENTRAR EL CARRIL DE LECTURA — para mejorar la legibilidad en textos largos
+     y evitar que el texto se extienda demasiado en pantallas grandes.
+  --------------------------------------------------------------- */
+
+/* Carril de lectura centralizado y consistente */
+.carril-lectura {
+  width: 100%;
+  max-width: 800px; /* Tu ancho de diseño */
+  margin-left: 1rem;   /* 16px para móviles */
+  margin-right: 1rem;
+  padding-left: 1rem;  /* 16px para móviles */
+  padding-right: 1rem;
+}
+
+@media (min-width: 768px) {
+  .carril-lectura {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+
+
+

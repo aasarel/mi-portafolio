@@ -1,0 +1,263 @@
+---
+// =========================================================================
+// PÁGINA DE DETALLE CASO DE ESTUDIO: MOSES - SCADA
+// ABRAHAM DESIGN SYSTEM — FUENTE DE VERDAD PARA PRODUCCIÓN
+// Framework: Astro v6 + Tailwind CSS v4 nativo
+// =========================================================================
+
+// Importación del Layout principal que inyecta la envolvente del proyecto y metadatos
+import ProjectLayout from '../layouts/ProjectLayout.astro';
+
+// Importación de componentes interactivos y estructurales de la maqueta sagrada
+import ImageSlider from '../components/ImageSlider.astro';
+import ReadingProgress from '../components/ReadingProgress.astro';
+import ProjectSection from '../components/ProjectSection.astro';
+import EditorialBody from '../components/EditorialBody.astro';
+import MetricCard from '../components/MetricCard.astro';
+
+// Importación nativa de Assets desde src/assets/ para procesamiento y optimización de Astro v6
+import imgAntes from '../assets/projects/moses/slider-antes.png';
+import imgDespues from '../assets/projects/moses/slider-despues.jpg';
+import ImageGrid from '../components/ImageGrid.astro';
+import ProjectFooter from '../components/ProjectFooter.astro';
+
+// ARREGLO DE NAVEGACIÓN LATERAL (ReadingProgress) — 8 Estaciones metodológicas estrictas
+// Se inyecta forzosamente la estación "inicio" en la posición 0 para control de scroll al tope
+const caseStudySteps = [
+  { id: "inicio", label: "Inicio" },
+  { id: "contexto", label: "Contexto y Desafío" },
+  { id: "restricciones", label: "Restricciones Críticas" },
+  { id: "auditoria", label: "Auditoría Normativa" },
+  { id: "arquitectura", label: "Arquitectura y Sistema" },
+  { id: "decisiones", label: "Decisiones Clave" },
+  { id: "impacto", label: "Impacto y Validación" },
+  { id: "escalabilidad", label: "Escalabilidad y Futuro" }
+];
+---
+
+<ProjectLayout 
+  title="MOSES - SCADA" 
+  subtitle="Rediseño visual y funcional del sistema de monitoreo estructural del Tren Interurbano México - Toluca" 
+  role="UX Product Designer" 
+  duration="14 meses" 
+  company="Grupo Sener México"
+>
+  {/* Contenedor de anclaje inicial para que la navegación lateral regrese al tope absoluto */}
+  <div id="inicio" class="scroll-mt-20">
+    {/* Componente de Apertura Visual: Slider interactivo con imágenes optimizadas y copys validados por UX Writing */}
+    <ImageSlider 
+      beforeImage={imgAntes.src} 
+      afterImage={imgDespues.src} 
+      beforeLabel="Sistema Heredado: Alta Carga Cognitiva y Saturación Visual" 
+      afterLabel="UX Optimizado: Claridad Operativa y Mitigación de Riesgos" 
+    />
+  </div>
+
+  {/* Rejilla Perimetral Sagrada de Figma: Contenedor global de alineación horizontal y posicionamiento relativo */}
+  <div class="mx-auto max-w-[1920px] px-6 md:px-12 lg:px-[128px] relative mt-24">
+    
+    {/* Navegación flotante lateral fija a la derecha leyendo las 8 estaciones metodológicas */}
+    <ReadingProgress steps={caseStudySteps} />
+
+    <div class="w-full max-w-[1920px] mx-auto pr-0 lg:pr-16 flex flex-col gap-4">
+
+      <ProjectSection id="contexto" title="Contexto y desafío operativo">
+        <EditorialBody>
+
+          <h2>Antecedentes</h2>
+          <p>
+            El sistema recopila y procesa variables físicas complejas provenientes de sensores instalados en cimentaciones, viaductos, vías, puentes y componentes estructurales de la línea férrea.
+          </p>
+          <p>
+            El sistema MOSES - SCADA original funcionaba correctamente a nivel lógico y técnico. La plataforma se ejecutaba sobre SIMATIC WinCC 7.4 y se migró a SIMATIC WinCC 8.1, en un entorno robusto para control y supervisión (SCADA), pero con capacidades gráficas nativas rígidas y limitadas para una buena experiencia de usuario.
+          </p>
+
+          <h2>El problema técnico y de negocio</h2>
+          <p>
+            El software ya se encontraba operativo, pero sin capa de presentación mostraba graves deficiencias de usabilidad, heredadas de patrones de diseño tipo Windows XP. Esto generaba tres problemas críticos:
+          </p>
+
+          <ol>
+            <li>
+              <strong>Alta carga cognitiva y omisión de alarmas:</strong> Los operadores e ingenieros deben interpretar volúmenes masivos de variables físicas bajo condiciones de estrés. La información competía visualmente por atención y no había un punto focal claro, lo que provocaba una <strong>fatiga por alarmas y saturación cognitiva</strong> e impedía distinguir alertas mayores y menores con facilidad.
+            </li>
+            <li>
+              <strong>Desorientación en la navegación:</strong> Las pantallas y funcionalidad se desarrollaron de forma aislada a lo largo del tiempo, lo que provocaba que el usuario operara sin un flujo centralizado, se desorientara y se perdiera entre módulos secundarios sin saber cuál era su pantalla principal y cómo regresar a ella.
+            </li>
+            <li>
+              <strong>Gobernanza del proyecto:</strong> Inicialmente se aprobó una propuesta que no contemplaba un cuadro de mando centralizado. En una actualización posterior de requerimientos, los stakeholders identificaron la necesidad imperativa de un Dashboard Centralizado y solicitaron su diseño e integración ágil, sin alterar la lógica interna ya programada.
+            </li>
+          </ol>
+
+          <h2>El reto de diseño</h2>
+          <p>
+            ¿Cómo estructurar una interfaz modular y un dashboard de control que redujera drásticamente la fatiga cognitiva y agilizara la toma de decisiones, operando estrictamente dentro de los límites rígidos de visualización y navegación de un sistema SIMATIC WinCC 8.1, que los operadores ya conocían y que pudieran adoptar de manera natural?
+          </p>
+
+        </EditorialBody>
+
+      </ProjectSection>
+
+      <ProjectSection id="restricciones" title="Restricciones críticas del entorno SCADA">
+        <EditorialBody>
+
+          <p>
+            A diferencia del desarrollo clásico, el entorno cerrado de SIMATIC WinCC 8.1 impuso limitantes que redefinieron mi estrategia de diseño. Cada decisión requirió un balance entre costo/beneficio:
+          </p>
+          
+          <ul>
+            <li>
+              <strong>Lo técnicamente inviable:</strong> Se descartó la implementación de un buscador predictivo global. También se descartó que la barra de menú lateral fuera colapsable, debido al costo prohibitivo en tiempos de desarrollo y recursos.
+            </li>
+            <li>
+              <strong>Mantener la lógica intacta:</strong> El rediseño debía ser estrictamente visual y funcional con iteraciones apegadas a las reglas de negocio, fórmulas de ingeniería y  la arquitectura del hardware de sensores.
+            </li>
+          </ul>
+
+        </EditorialBody>
+      </ProjectSection>
+
+      <ProjectSection id="auditoria" title="Auditoría normativa e investigación experta">
+        <EditorialBody>
+
+          <p>
+            Debido a cláusulas contractuales con el cliente final y estrictos protocolos de seguridad industrial, no se otorgó acceso directo al personal del área de monitoreo. Para subsanar esto, la fase de descubrimiento se basó en:
+          </p>
+          
+          <ol>
+            <li>
+              <strong>Mapeo con expertos (SMEs):</strong>  Entrevistas técnicas en profundidad con ingenieros SCADA, ingenieros estructurales e ingenieros de sitio para entender cómo decodificaban las variables físicas en condiciones reales y cómo deberían mostrarse en pantalla para que operadores con perfiles junior o especializados pudieran interpretar de manera fácil.
+            </li>
+            <li>
+              <strong>Auditoría de cumplimiento normativo:</strong> Reemplacé el user research tradicional por la alineación estricta a tres estándares internacionales de ingeniería industrial:
+              <ul>
+                <li>ISA 101: Diseño de interfaces humano-máquina (HMI) eficientes.</li>
+                <li>ISA-18.2: Gestión y priorización de alarmas operativas.</li>
+                <li>ISO 9241-210: Ergonomía e interacción humano-sistema.</li>
+              </ul>
+            </li>
+          </ol>
+
+          <p>
+            <strong>Comparativa visual: interfaz heredada vs. rediseño UX alineado a ISA-101.</strong>
+          </p>
+
+          <ImageGrid
+            images={[
+              { src: imgAntes.src, alt: 'Sistema MOSES-SCADA original: interfaz heredada con alta carga cognitiva y saturación visual tipo Windows XP' },
+              { src: imgDespues.src, alt: 'Sistema MOSES-SCADA rediseñado: interfaz ISA-101 con esquema oscuro, jerarquía visual y codificación cromática funcional' }
+            ]}
+          />
+
+        </EditorialBody>
+      </ProjectSection>
+
+      <ProjectSection id="arquitectura" title="Arquitectura de información y diseño integral del sistema">
+        <EditorialBody>
+
+          <p>
+            Para mitigar la desorientación del usuario y resolver el cambio de alcance de los stakeholders, reestructuré el ecosistema dividiendo la estrategia de información en dos grandes pilares funcionales.
+          </p>
+          
+          <ol>
+            <li>
+              <strong>Arquitectura de información y navegación global de la aplicación</strong> 
+              <p>Este bloque resolvió la inconsistencia modular de todo el software y la transición entre pantallas, atacando la experiencia desde la puerta de entrada:</p>
+              <ul>
+                <li><strong>Estandarización de módulos existentes:</strong> Definí layouts consistentes e iconografía unificada para que la navegación dentro del sistema se rigiera por las mismas reglas espaciales y jerárquicas.</li>
+                <li><strong>Menú lateral:</strong> Diseñé un menú de navegación estructurado por sección operativa, con listas desplegables y sección administrativa. Aunque WINCC dificulta estas interacciones, el equipo de desarrollo SCADA logró un acto heroico de programación mediante scripts personalizados para emular el efecto dinámico de contracción y expansión de las maquetas creadas con Figma.</li>
+                <li><strong>Modernización del acceso (login):</strong> De forma nativa, el sistema abre una ventana flotante sin estilos. Negocié y coordiné con el equipo de desarrollo la creación de una base de datos externa a WinCC para administrar usuarios, lo que me permitió diseñar una interfaz de acceso limpia, corporativa y alineada con el lenguaje visual actual.</li>
+              </ul>
+            </li>
+            <li>
+              <strong>Arquitectura de información y diseño del Dashboard central</strong>
+              <p>El nuevo dashboard centralizó el estado operativo de los 250+ sensores en tres zonas estratégicas:</p>
+              <ul>
+                <li><strong>Mapa espacial</strong>.
+                <p><strong>Contenido técnico:</strong> Mejora del mapa del trazo ferroviario con iconos de infraestructura (estaciones, viaductos, túneles, puentes) y que ahora incluyen estados de alarmas visuales.</p>
+                <p><strong>Estrategia de diseño/negociación:</strong> Originalmente se pretendía saturar esta vista con planos plagados de semáforos y etiquetas. Diseñé esa propuesta para evidenciar la alta carga cognitiva. Al verla, los stakeholders entendieron el punto y aceptaron el diseño limpio propuesto.</p>
+                </li>
+                <li><strong>Estado general del sistema</strong>.
+                <p><strong>Contenido técnico:</strong> 5 tarjetas consensuadas (Alarmas de comunicación, Alarmas críticas de instrumentos, Dataloggers activos, Trenes en circulación, Switches activos).</p>
+                <p><strong>Estrategia de diseño:</strong> Rompe la dispersión de datos. Permite saber de un vistazo si el sistema operativo está sano o requiere atención inmediata. Refuerza los estados de alarma con el número de alarmas o instrumentos.</p>
+                </li>
+                <li><strong>Estadísticas y tendencias</strong>.
+                <p><strong>Contenido técnico:</strong> 3 gráficos distintos que muestran el comportamiento histórico de la severidad del sistema.</p>
+                <p><strong>Estrategia de diseño:</strong> Facilita a los operadores identificar patrones anómalos en el tiempo para activar mantenimientos preventivos.</p>
+                </li>
+              </ul>
+            </li>
+          </ol>
+
+        </EditorialBody>
+      </ProjectSection>
+
+      <ProjectSection id="decisiones" title="Decisiones clave de diseño">
+        <EditorialBody>
+
+          <p>
+            Debido a que el enfoque central es identificar estados de alarmas, opté por un diseño minimalista funcional de manera que las alarmas tuvieran el enfoque principal. Para ello utilicé los principios de Material Design y la norma ISA-101.
+          </p>
+
+          <ul>
+            <li><strong>Estilo oscuro (Dark mode):</strong> Con base en los principios de Material Design y considerando que la operación del sistema se realiza sobre Windows 10+, utilicé los estándares de Microsoft UI y Fluent 2. La adopción de un esquema oscuro mejoró el contraste tipográfico y redujo drásticamente la fatiga ocular durante las jornadas de monitoreo continuo en el Centro de Control.</li>
+            <li><strong>Separación de colores:</strong> Siguiendo la norma ISA-101, los colores vivos se reservaron estrictamente para alertamiento funcional (Rojo: crítico, Anaranjado: atención, Amarillo: falla de comunicación, Verde: normal). Para las gráficas de métricas y barras de datos cotidianos, utilicé una paleta neutra en colores azul y morado, evitando que las variaciones normales de datos se confundan con alertas del sistema.</li>
+          </ul>
+        </EditorialBody>
+      </ProjectSection>
+
+      <ProjectSection id="impacto" title="Impacto y validación cualitativa">
+        <EditorialBody>
+
+          <p>
+            Actualmente, el sistema MOSES-SCADA se encuentra desplegado y operando entiempo real en el Centro de Control del Tren Interurbano México-Toluca. Aunque los protocolos de seguridad impidieron el uso de analíticas cuantitativas directas, las pruebas de entrega y la capacitación técnica arrojaron resultados cualitativosde alto valor:
+          </p>
+
+          <ul>
+            <li><strong>Velocidad de reacción síncrona:</strong> Durante las capacitaciones, los operadores demostraron una identificación significativamente más rápida de las zonas geográficas con alertas críticas.</li>
+            <li><strong>Reducción de la curva de aprendizaje:</strong> Los comentarios de los operadores validaron directamente la reestructura de la navegación global: “Ahora ya sé exactamente cómo llegar a “una pantalla específica”; moverme entre las opciones del menú y las pantallas es mucho más sencillo.”</li>
+            <li><strong>Precisión en diagnósticos:</strong> El detalle visual unificado de las estructuras y sus instrumentos mitigó posibles errores de interpretación que provocaba la interfaz anterior.</li>
+          </ul>
+        </EditorialBody>
+      </ProjectSection>
+
+      <ProjectSection id="escalabilidad" title="Escalabilidad y visión a futuro">
+        <EditorialBody>
+
+          <p>
+            Mi aportación final en el proyecto no se limitó a resolver el aspecto visual del Tren Interurbano; busqué dejar una base de gobernanza de diseño duradero para la organización y futuros proyectos de monitoreo estructural.
+          </p>
+          
+          {/* ========================================================= 
+              GRUPO DE MÉTRICAS (3 columnas)
+              ========================================================= */}
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full my-10">
+            
+            {/* Tarjeta 1 */}
+            <MetricCard
+              label="Cimientos del Design System"
+              description="Antes de concluir mi ciclo en la empresa, empaqueté las fundaciones visuales, tokens de color, tipografías legibles para pantallas técnicas y componentes en un archivo maestro de Figma."
+            />
+
+            <MetricCard
+              label="Adopción inmediata"
+              description="Los comentarios de los operadores validaron directamente la reestructura de la navegación global: &quot;Ahora ya sé exactamente cómo llegar a una pantalla específica; moverme entre las opciones del menú y las pantallas es mucho más sencillo.&quot;"
+            />
+
+            <MetricCard
+              label="Precisión en diagnósticos"
+              description="Este esfuerzo se convirtió en el sello visual de la empresa en México. Un proyecto subsecuente adoptó por completo esta arquitectura, navegación y diseño. Un segundo aplicativo quedó mapeado en fase de prototipo de alta fidelidad bajo las mismas reglas, y un tercer proyecto en puerta quedó estandarizado para heredar el mismo framework corporativo."
+            />
+
+          </div>
+
+        </EditorialBody>
+      </ProjectSection>
+
+    </div>
+  </div>
+
+  <ProjectFooter
+    nextProject={{ label: "PAYROL", href: "/payrol" }}
+  />
+</ProjectLayout>

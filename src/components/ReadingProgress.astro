@@ -1,0 +1,186 @@
+---
+// ==========================================
+// PROPIEDADES Y CONFIGURACIÓN DEL NAV MAESTRO
+// ==========================================
+
+// Estructura tipada para procesar las secciones de la narrativa
+interface Step {
+  id: string;    // El ID exacto del contenedor HTML (anclaje)
+  label: string; // Nombre editorial de la sección (ej: "Auditoría Normativa")
+}
+
+interface Props {
+  steps: Step[]; // Colección completa de las 9 estaciones metodológicas
+}
+
+const { steps } = Astro.props;
+---
+
+<nav class="hidden lg:flex fixed right-6 xl:right-12 top-1/2 -translate-y-1/2 z-40 items-center justify-end group/nav py-6 select-none" aria-label="Mapa de lectura escritorio">
+  <div class="flex flex-col gap-5 items-end py-6 pl-8 pr-4 rounded-[20px] border border-transparent bg-transparent group-hover/nav:bg-bg-primary/[0.60] group-hover/nav:backdrop-blur-xl group-hover/nav:border-text-primary/[0.06] group-hover/nav:shadow-[0_32px_64px_-16px_rgba(0,0,0,0.06)] transition-all duration-[1300ms] ease-out-silk-wave">
+    {steps.map((step, index) => (
+      <a href={`#${step.id}`} data-step-target={step.id} class="flex items-center justify-end gap-3 h-5 group/item focus:outline-none step-nav-link">
+        <div class="opacity-0 -translate-x-2 pointer-events-none group-hover/nav:opacity-100 group-hover/nav:translate-x-0 transition-all duration-500 ease-out-silk-wave flex items-center justify-end">
+          <span class="font-sans text-[11px] font-normal text-text-primary/40 group-hover/item:text-text-primary transition-colors duration-200 tracking-tight whitespace-nowrap step-label">{step.label}</span>
+        </div>
+        <span class="font-mono text-[10px] tracking-widest text-text-primary/20 group-hover/item:text-text-accent transition-all duration-400 ease-out-silk-wave step-num opacity-0 group-hover/nav:opacity-100">0{index + 1}</span>
+        <div class="h-[2px] w-3 bg-text-primary/15 group-hover/nav:bg-text-primary/30 group-hover/item:bg-text-primary/70 rounded-full transition-all duration-[800ms] ease-out-silk-wave step-dash"></div>
+      </a>
+    ))}
+  </div>
+</nav>
+
+<button 
+  id="mobile-nav-trigger"
+  class="lg:hidden fixed bottom-6 right-6 z-50 w-12 h-12 rounded-full bg-bg-primary/70 backdrop-blur-md border border-text-primary/[0.08] shadow-[0_8px_32px_rgba(0,0,0,0.08)] flex items-center justify-center text-text-primary active:scale-90 transition-all duration-300 focus:outline-none"
+  aria-label="Abrir menú de navegación de pasos"
+>
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <line x1="3" y1="6" x2="15" y2="6"></line>
+    <line x1="3" y1="12" x2="21" y2="12"></line>
+    <line x1="3" y1="18" x2="11" y2="18"></line>
+    <path d="M19 6l3 3-3 3"></path>
+  </svg>
+</button>
+
+<div 
+  id="mobile-nav-sheet" 
+  class="lg:hidden fixed inset-0 z-50 pointer-events-none bg-black/0 backdrop-blur-none transition-all duration-500 ease-out-silk-wave"
+>
+  <div 
+    class="absolute bottom-0 left-0 right-0 max-h-[72vh] bg-bg-primary/[0.75] backdrop-blur-2xl border-t border-text-primary/[0.08] rounded-t-[28px] p-6 shadow-[0_-24px_64px_rgba(0,0,0,0.12)] translate-y-full transition-transform duration-500 ease-out-silk-wave pointer-events-auto flex flex-col gap-5"
+  >
+    <div class="flex items-center justify-between border-b border-text-primary/5 pb-3">
+      <h3 class="font-display font-semibold text-xs uppercase tracking-widest text-text-accent">Índice del Caso</h3>
+      <button id="mobile-nav-close" class="text-[10px] font-mono uppercase tracking-widest text-text-primary/40 rounded p-1">Cerrar</button>
+    </div>
+
+    <div class="overflow-y-auto flex flex-col gap-1 py-1 pr-1">
+      {steps.map((step, index) => (
+        <a 
+          href={`#${step.id}`} 
+          data-step-target={step.id} 
+          class="flex items-center justify-between py-3.5 px-4 border-l-2 border-transparent text-left rounded-none transition-all duration-200 mobile-nav-link"
+        >
+          <span class="font-sans text-[13px] font-normal text-text-primary/60 step-mobile-txt">{step.label}</span>
+          <span class="font-mono text-[10px] text-text-primary/25">0{index + 1}</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Curva matemática de seda y ola unificada para transiciones orgánicas */
+  .ease-out-silk-wave {
+    transition-timing-function: cubic-bezier(0.3, 0, 0.15, 1.12);
+  }
+</style>
+
+<script>
+  // ======================================================================
+  // ENGINE INTERACTIVO: RADAR ÓPTICO Y CONTROL DE GESTOS TÁCTILES
+  // ======================================================================
+  function initAdaptiveProgressSystem() {
+    const navLinks = document.querySelectorAll('.step-nav-link');
+    const mobileLinks = document.querySelectorAll('.mobile-nav-link');
+    
+    // Mapeo selectivo de secciones físicas reales en el documento
+    const sections = Array.from(navLinks).map(link => {
+      const targetId = link.getAttribute('data-step-target');
+      return document.getElementById(targetId);
+    }).filter(section => section !== null);
+
+    // Gestor unificado para encender e iluminar el paso actual (PC + Móvil)
+    const setGlobalActiveState = (activeId: string) => {
+      // Sincronización para visualización en computadoras de escritorio
+      navLinks.forEach(link => {
+        const targetId = link.getAttribute('data-step-target');
+        const num = link.querySelector('.step-num');
+        const label = link.querySelector('.step-label');
+        const dash = link.querySelector('.step-dash') as HTMLElement;
+
+        if (targetId === activeId) {
+          num?.classList.add('text-text-accent', 'font-semibold', '!opacity-100');
+          label?.classList.add('text-text-primary', 'font-semibold');
+          if (dash) (dash.style.width = '20px', dash.style.backgroundColor = 'var(--color-text-accent, #ff5500)');
+        } else {
+          num?.classList.remove('text-text-accent', 'font-semibold', '!opacity-100');
+          num?.classList.add('text-text-primary/20');
+          label?.classList.remove('text-text-primary', 'font-semibold');
+          label?.classList.add('text-text-primary/50');
+          if (dash) (dash.style.width = '', dash.style.backgroundColor = '');
+        }
+      });
+
+      // CORRECCIÓN SHARP INDICATOR: Activación estricta sin radio ni píldoras de fondo
+      mobileLinks.forEach(link => {
+        const targetId = link.getAttribute('data-step-target');
+        const txt = link.querySelector('.step-mobile-txt');
+
+        if (targetId === activeId) {
+          // Remoción estricta de bordes redondeados o cajas invasivas. 
+          // Al activarse, se transforma exclusivamente en una línea de acento vertical plana y pura.
+          link.classList.remove('border-transparent', 'rounded-xl');
+          link.classList.add('border-text-accent', 'bg-text-primary/[0.02]', 'rounded-none');
+          txt?.classList.remove('text-text-primary/60');
+          txt?.classList.add('text-text-primary', 'font-medium');
+        } else {
+          link.classList.remove('border-text-accent', 'bg-text-primary/[0.02]', 'rounded-none');
+          link.classList.add('border-transparent');
+          txt?.classList.remove('text-text-primary', 'font-medium');
+          txt?.classList.add('text-text-primary/60');
+        }
+      });
+    };
+
+    // Radar de intersección vertical unificado
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting && window.scrollY >= 80) {
+          setGlobalActiveState(entry.target.id);
+        }
+      });
+    }, { root: null, rootMargin: '-20% 0px -60% 0px', threshold: 0 });
+
+    sections.forEach(section => observer.observe(section));
+
+    // Fallback unificado para forzar la iluminación de "Inicio" al subir al tope
+    const handleScrollFallback = () => {
+      if (window.scrollY < 80) setGlobalActiveState('inicio');
+    };
+    window.addEventListener('scroll', handleScrollFallback);
+    handleScrollFallback();
+
+    // LÓGICA DE CONTROL: APERTURA Y CIERRE DE HOJA MODAL INFERIOR
+    const trigger = document.getElementById('mobile-nav-trigger');
+    const sheet = document.getElementById('mobile-nav-sheet');
+    const closeBtn = document.getElementById('mobile-nav-close');
+    const panel = sheet?.querySelector('.absolute');
+
+    if (!trigger || !sheet || !panel) return;
+
+    const openSheet = () => {
+      sheet.classList.remove('pointer-events-none', 'bg-black/0', 'backdrop-blur-none');
+      sheet.classList.add('bg-black/10', 'backdrop-blur-[1px]'); // Atenuación ambiental muy sutil
+      panel.classList.remove('translate-y-full');
+    };
+
+    const closeSheet = () => {
+      sheet.classList.add('pointer-events-none');
+      sheet.classList.remove('bg-black/10', 'backdrop-blur-[1px]');
+      sheet.classList.add('bg-black/0', 'backdrop-blur-none');
+      panel.classList.add('translate-y-full');
+    };
+
+    // Vinculación de disparadores táctiles nativos
+    trigger.addEventListener('click', openSheet);
+    closeBtn?.addEventListener('click', closeSheet);
+    sheet.addEventListener('click', (e) => { if (e.target === sheet) closeSheet(); });
+    mobileLinks.forEach(link => link.addEventListener('click', closeSheet));
+  }
+
+  // Soporte integrado al ciclo de vida global de Astro y View Transitions
+  document.addEventListener('astro:page-load', initAdaptiveProgressSystem);
+  initAdaptiveProgressSystem();
+</script>

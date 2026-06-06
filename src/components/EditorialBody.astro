@@ -1,0 +1,215 @@
+---
+// =========================================================================
+// ABRAHAM DESIGN SYSTEM — COMPONENTE MAESTRO: EditorialBody.astro
+// =========================================================================
+// Propósito: Gobierno tipográfico absoluto del carril de lectura de 800px.
+// Auto-estiliza etiquetas estándar (p, table, ul, ol, blockquote) con tus tokens de Figma.
+---
+
+<div class="prose-asarel flex flex-col gap-6">
+  <slot />
+</div>
+
+<style is:global>
+  /* ====================================================================
+  ESTILOS SEMÁNTICOS CONTROLADOS (Corregidos para variables Hexadecimales)
+  ==================================================================== */
+
+  /* PÁRRAFOS EDITORIALES */
+  .prose-asarel p {
+    font-family: var(--font-sans, 'Inter', sans-serif);
+    font-size: 16px;
+    line-height: 26px;
+    /* Usamos color-mix para aplicar 75% de opacidad a tu variable Hex */
+    color: color-mix(in srgb, var(--color-text-primary) 75%, transparent);
+    margin-bottom: 4px;
+    text-wrap: pretty;
+  }
+
+  /* ====================================================================
+  JERARQUÍA DE ENCABEZADOS (Restaurando el peso visual)
+  ==================================================================== */
+
+  /* H2: Títulos de sección internos (Alto impacto) */
+  .prose-asarel h2 {
+    font-family: var(--font-display, sans-serif);
+    font-size: 24px;
+    line-height: 32px;
+    font-weight: 700;
+    color: var(--color-text-primary);
+    margin-top: 48px;
+    margin-bottom: 16px;
+    letter-spacing: -0.01em;
+  }
+
+  /* H3: Subtítulos de bloque (Como "Antecedentes" o "El reto") */
+  .prose-asarel h3 {
+    font-family: var(--font-sans, 'Inter', sans-serif);
+    font-size: 18px;
+    line-height: 28px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-top: 32px;
+    margin-bottom: 12px;
+  }
+
+  /* H4: Micro-títulos o agrupadores menores */
+  .prose-asarel h4 {
+    font-family: var(--font-sans, 'Inter', sans-serif);
+    font-size: 15px;
+    line-height: 24px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-secondary);
+    margin-top: 24px;
+    margin-bottom: 8px;
+  }
+
+  /* TEXTO DESTACADO INTRA-PÁRRAFO */
+  .prose-asarel strong {
+    color: var(--color-text-primary, #ffffff);
+    font-weight: 600;
+  }
+
+  /* ENLACES EDITORIALES INTERNOS */
+  .prose-asarel a {
+    color: var(--color-text-accent, #ff5500);
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-text-accent) 30%, transparent);
+    transition: border-color 0.2s ease;
+  }
+  .prose-asarel a:hover {
+    border-bottom-color: var(--color-text-accent, #ff5500);
+  }
+
+  /* ==========================================================
+     VIÑETAS MINIMALISTAS (LISTAS UNORDERED)
+     ========================================================== */
+  .prose-asarel ul {
+    list-style-type: none; /* Apaga viñetas nativas */
+    padding-left: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  
+  .prose-asarel ul li {
+    position: relative;
+    font-family: var(--font-sans, 'Inter', sans-serif);
+    font-size: 15px;
+    line-height: 24px;
+    color: color-mix(in srgb, var(--color-text-primary) 75%, transparent);
+  }
+  
+  /* Punto naranja para UL (incluso si está anidado dentro de un OL) */
+  .prose-asarel ul li::before {
+    content: '';
+    position: absolute;
+    left: -16px;
+    top: 10px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background-color: var(--color-text-accent, #ff5500);
+  }
+
+  /* ==========================================================
+     LISTAS NUMERADAS INDEXADAS (ORDERED LISTS)
+     ========================================================== */
+  .prose-asarel ol {
+    list-style-type: none; /* EL CULPABLE: Apaga los números nativos del navegador */
+    counter-reset: asarel-counter;
+    padding-left: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  
+  /* Usamos ">" para que SOLO afecte a los elementos de la lista principal, no a los anidados */
+  .prose-asarel ol > li {
+    position: relative;
+    font-family: var(--font-sans, 'Inter', sans-serif);
+    font-size: 15px;
+    line-height: 24px;
+    color: color-mix(in srgb, var(--color-text-primary) 75%, transparent);
+  }
+  
+  /* Tipografía Mono para los números (Solo primer nivel) */
+  .prose-asarel ol > li::before {
+    counter-increment: asarel-counter;
+    content: "0" counter(asarel-counter) ".";
+    position: absolute;
+    left: -28px;
+    top: 2px;
+    font-family: var(--font-mono, monospace);
+    font-size: 11px;
+    color: var(--color-text-accent, #ff5500);
+    
+    /* Protecciones extra por si el navegador intenta heredar la forma del punto */
+    background-color: transparent;
+    width: auto;
+    height: auto;
+  }
+
+  /* REGLA DE LISTAS INTELIGENTES (>8 ÍTEMS) */
+  .prose-asarel ul.split-list,
+  .prose-asarel ol.split-list {
+    display: block;
+    column-count: 1;
+    column-gap: 48px;
+  }
+  @media (min-width: 640px) {
+    .prose-asarel ul.split-list,
+    .prose-asarel ol.split-list {
+      column-count: 2;
+    }
+    .prose-asarel .split-list li {
+      break-inside: avoid;
+      margin-bottom: 10px;
+    }
+  }
+
+  /* TABLAS DE DATOS Y MATRICES COMPARATIVAS */
+  .prose-asarel table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 32px 0;
+    font-size: 16px;
+    text-align: left;
+  }
+  /* Encabezados Mono de alta ingeniería industrial */
+  .prose-asarel th {
+    font-family: var(--font-mono, monospace);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--color-text-accent, #ff5500);
+    padding: 12px 16px;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-text-primary) 15%, transparent);
+  }
+  .prose-asarel td {
+    padding: 14px 16px;
+    font-family: var(--font-sans, 'Inter', sans-serif);
+    color: color-mix(in srgb, var(--color-text-primary) 80%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--color-text-primary) 5%, transparent);
+  }
+  /* Estructura cebra ultra atenuada */
+  .prose-asarel tr:nth-child(even) {
+    background-color: color-mix(in srgb, var(--color-text-primary) 1.5%, transparent);
+  }
+
+  /* CITAS TEXTUALES DESTACADAS (BLOCKQUOTES) */
+  .prose-asarel blockquote {
+    font-family: var(--font-display, sans-serif);
+    font-style: italic;
+    font-size: 18px;
+    line-height: 28px;
+    color: color-mix(in srgb, var(--color-text-primary) 90%, transparent);
+    padding-left: 20px;
+    border-left: 2px solid color-mix(in srgb, var(--color-text-primary) 30%, transparent);
+    margin: 28px 0;
+  }
+</style>

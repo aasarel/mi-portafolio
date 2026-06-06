@@ -1,0 +1,249 @@
+---
+// src/components/ProjectRow.astro
+
+interface Props {
+  id?: string;        // Hacemos el ID opcional con ?
+  title: string;
+  description: string;
+  link: string;
+  platform: string;
+  images: string[];
+  activeIndex?: number; // Añadimos activeIndex como opcional
+}
+
+// Desestructuración con valores por defecto
+const { 
+  id = "default-project", 
+  title, 
+  description, 
+  link, 
+  platform, 
+  images, 
+  activeIndex = 0 
+} = Astro.props;
+---
+
+<div 
+  class="w-full border-b border-text-primary/10 py-16 bg-bg-primary text-text-primary project-row-container"
+  data-project-id={id}
+>
+  <div class="mx-auto max-w-[1552px] px-6 md:px-12 lg:px-[128px] flex flex-col gap-8">
+    
+    <div class="w-full flex flex-col gap-4 relative">
+      <div 
+        class="relative w-full aspect-[1296/549] bg-bg-secondary rounded overflow-hidden border border-text-primary/10 group carousel-viewport focus:outline-none transition-all duration-300 data-[keyboard-focus=true]:ring-2 data-[keyboard-focus=true]:ring-text-primary/40 data-[keyboard-focus=true]:ring-offset-4 data-[keyboard-focus=true]:ring-offset-bg-primary"
+        tabindex="0"
+        role="region"
+        aria-roledescription="carousel"
+        aria-label={`Galería de imágenes de ${title}`}
+        data-keyboard-focus="false"
+      >
+        
+        <div class="absolute inset-0 flex items-center justify-center text-text-primary/[0.03] pointer-events-none select-none z-0">
+          <span class="text-[180px] md:text-[240px] font-mono">🦉</span>
+        </div>
+        
+        <div class="absolute inset-0 z-10 w-full h-full pointer-events-none">
+          {images.map((imgSrc, index) => (
+            <img 
+              src={imgSrc} 
+              alt={`Captura de ${title} - Imagen ${index + 1}`}
+              class={`absolute inset-0 w-full h-full object-cover grayscale contrast-110 group-hover:grayscale-0 transition-all duration-[750ms] ease-out-apple ${index === 0 ? 'opacity-100 scale-100' : 'opacity-0 scale-[0.98]'}`}
+              data-index={index}
+            />
+          ))}
+        </div>
+
+        <button class="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-bg-primary/20 to-transparent z-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer nav-arrow-left" aria-label="Imagen anterior" tabindex="-1">
+          <span class="text-2xl font-mono text-text-primary select-none pointer-events-none">←</span>
+        </button>
+        <button class="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-bg-primary/20 to-transparent z-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer nav-arrow-right" aria-label="Siguiente imagen" tabindex="-1">
+          <span class="text-2xl font-mono text-text-primary select-none pointer-events-none">→</span>
+        </button>
+
+        <div class="absolute top-4 right-4 z-20 bg-bg-primary/80 backdrop-blur px-3 py-1 rounded text-[10px] font-mono uppercase tracking-widest opacity-0 transition-opacity duration-300 pause-indicator select-none pointer-events-none">
+          Pausado
+        </div>
+      </div>
+      
+      <div class="flex gap-2 w-full indicators-wrapper">
+        {images.map((_, index) => (
+          <button class="py-3 flex-grow cursor-pointer focus:outline-none" data-to-index={index} aria-label={`Ir a la imagen ${index + 1}`} aria-current={index === 0 ? "true" : "false"}>
+            <div class={`h-1 w-full rounded transition-all duration-300 ${index === 0 ? 'bg-text-primary' : 'bg-text-primary/20'}`}></div>
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <div class="w-full grid grid-cols-1 md:grid-cols-12 gap-[32px] pt-4">
+      <div class="col-span-12 md:col-span-5 text-left">
+        <h3 class="font-display text-2xl md:text-3xl font-bold tracking-tight text-text-primary leading-tight">
+          {title}
+        </h3>
+        <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-text-accent mt-2 font-medium">
+          {platform}
+        </p>
+      </div>
+
+      <div class="col-span-12 md:col-span-7 flex flex-col gap-6 text-left">
+        <p class="font-sans text-[15px] font-normal leading-[26px] text-text-primary/80">
+          {description}
+        </p>
+        <div class="pt-2">
+          <a href={link} class="inline-flex items-center font-mono text-xs uppercase tracking-[0.2em] text-text-primary hover:text-text-accent transition-colors duration-200 group/link">
+            Ve el detalle del proyecto <span class="transform translate-x-0 group-hover/link:translate-x-1.5 transition-transform duration-200 ml-2">→</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  .ease-out-apple { transition-timing-function: cubic-bezier(0.15, 1, 0.3, 1); }
+</style>
+
+<script>
+  // DETECTOR ULTRA-ESTRICTO DE NAVEGACIÓN POR TECLADO
+  let isTabNavigation = false;
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === 'Tab') isTabNavigation = true;
+  }, { passive: true });
+
+  window.addEventListener('mousedown', () => {
+    isTabNavigation = false;
+  }, { passive: true });
+
+  function initCarousels() {
+    const rows = document.querySelectorAll('.project-row-container');
+    rows.forEach((row) => {
+      const images = row.querySelectorAll('.carousel-viewport img');
+      const indicatorsButtons = row.querySelectorAll('.indicators-wrapper button');
+      const viewport = row.querySelector('.carousel-viewport') as HTMLElement; // Aseguramos tipado básico
+      const arrowLeft = row.querySelector('.nav-arrow-left');
+      const arrowRight = row.querySelector('.nav-arrow-right');
+      const pauseIndicator = row.querySelector('.pause-indicator');
+      
+      let currentIndex = 0;
+      const total = images.length;
+      let intervalId = null;
+      let isPaused = false;
+      const autoplayTime = 4000;
+
+      function goToIndex(nextIndex) {
+        if (nextIndex < 0) nextIndex = total - 1;
+        if (nextIndex >= total) nextIndex = 0;
+        currentIndex = nextIndex;
+        
+        images.forEach((img, idx) => {
+          if (idx === currentIndex) {
+            img.classList.remove('opacity-0', 'scale-[0.98]');
+            img.classList.add('opacity-100', 'scale-100');
+          } else {
+            img.classList.remove('opacity-100', 'scale-100');
+            img.classList.add('opacity-0', 'scale-[0.98]');
+          }
+        });
+
+        indicatorsButtons.forEach((btn, idx) => {
+          btn.setAttribute('aria-current', idx === currentIndex ? 'true' : 'false');
+          const bar = btn.querySelector('div');
+          if (idx === currentIndex) {
+            bar.classList.remove('bg-text-primary/20');
+            bar.classList.add('bg-text-primary');
+          } else {
+            bar.classList.remove('bg-text-primary');
+            bar.classList.add('bg-text-primary/20');
+          }
+        });
+      }
+
+      function startAutoplay() { if (!isPaused) { intervalId = setInterval(() => goToIndex(currentIndex + 1), autoplayTime); } }
+      function stopAutoplay() { if (intervalId) clearInterval(intervalId); }
+
+      function togglePause() {
+        isPaused = !isPaused;
+        if (isPaused) {
+          stopAutoplay();
+          pauseIndicator.classList.remove('opacity-0');
+          pauseIndicator.classList.add('opacity-100');
+        } else {
+          pauseIndicator.classList.remove('opacity-100');
+          pauseIndicator.classList.add('opacity-0');
+          startAutoplay();
+        }
+      }
+
+      arrowLeft?.addEventListener('click', (e) => { e.stopPropagation(); goToIndex(currentIndex - 1); });
+      arrowRight?.addEventListener('click', (e) => { e.stopPropagation(); goToIndex(currentIndex + 1); });
+      viewport?.addEventListener('mouseenter', () => { if (!isPaused) stopAutoplay(); });
+      viewport?.addEventListener('mouseleave', () => { if (!isPaused) startAutoplay(); });
+
+      indicatorsButtons.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const targetIndex = parseInt(btn.getAttribute('data-to-index'));
+          goToIndex(targetIndex);
+        });
+      });
+
+      // BLINDAJE VISUAL: Solo activamos el anillo flotante si el foco llegó mediante la tecla TAB
+      viewport?.addEventListener('focus', () => {
+        if (isTabNavigation) {
+          viewport.setAttribute('data-keyboard-focus', 'true');
+        }
+      });
+
+      viewport?.addEventListener('blur', () => {
+        viewport.setAttribute('data-keyboard-focus', 'false');
+      });
+
+      window.addEventListener('keydown', (e) => {
+        if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+
+        const hasFocus = row.contains(document.activeElement);
+        const rect = row.getBoundingClientRect();
+        const viewportCenter = window.innerHeight / 2;
+        const isCentered = rect.top < viewportCenter && rect.bottom > viewportCenter;
+        const noForeignFocus = !document.activeElement || document.activeElement === document.body || row.contains(document.activeElement);
+
+        if (hasFocus || (isCentered && noForeignFocus)) {
+          e.preventDefault(); 
+          if (e.key === 'ArrowLeft') goToIndex(currentIndex - 1);
+          if (e.key === 'ArrowRight') goToIndex(currentIndex + 1);
+        }
+      });
+
+      let wheelTimeout = null;
+      viewport?.addEventListener('wheel', (e) => {
+        if (Math.abs(e.deltaX) > 30) {
+          e.preventDefault();
+          if (!wheelTimeout) {
+            if (e.deltaX > 0) goToIndex(currentIndex + 1);
+            if (e.deltaX < 0) goToIndex(currentIndex - 1);
+            wheelTimeout = setTimeout(() => { wheelTimeout = null; }, 600);
+          }
+        }
+      }, { passive: false });
+
+      viewport?.addEventListener('click', () => { togglePause(); });
+
+      let touchStartX = 0;
+      let touchEndX = 0;
+      viewport?.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
+      viewport?.addEventListener('touchend', (e) => { touchEndX = e.changedTouches[0].screenX; handleSwipe(); }, { passive: true });
+
+      function handleSwipe() {
+        const threshold = 50;
+        if (touchStartX - touchEndX > threshold) goToIndex(currentIndex + 1);
+        if (touchEndX - touchStartX > threshold) goToIndex(currentIndex - 1);
+      }
+
+      startAutoplay();
+    });
+  }
+  document.addEventListener('astro:page-load', initCarousels);
+  initCarousels();
+</script>

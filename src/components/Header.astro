@@ -1,0 +1,378 @@
+---
+// src/components/Header.astro
+// Menú superior — Portfolio UX & Product Designer
+// Tailwind v4 + tokens desde global.css + dark mode via .dark en <html>
+
+const navLinks = [
+  { label: "Inicio",        href: "/" },
+  { label: "Proyectos",     href: "/#portafolio" },
+  { label: "Arte visual",   href: "/arte-visual" },
+  { label: "Servicios",     href: "/servicios" },
+  { label: "Sobre mí",      href: "/sobre-mi" },
+  { label: "Contáctame",    href: "/contacto" },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header
+  id="site-header"
+  class="
+    fixed top-0 left-0 right-0 z-50
+    bg-bg-primary/90 backdrop-blur-md
+    border-b border-bg-tertiary
+    transition-all duration-300
+  "
+>
+  <div class="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+
+    <!-- ── LOGO / NOMBRE ── -->
+    <a
+      href="/"
+      class="
+        group flex items-center gap-2
+        text-text-primary no-underline
+        transition-colors duration-200
+      "
+      aria-label="Ir al inicio"
+    >
+      <!-- Monograma decorativo -->
+      <span
+        aria-hidden="true"
+        class="
+          w-8 h-8 rounded-sm
+          bg-accent-amber
+          flex items-center justify-center
+          text-bg-primary text-xs font-bold tracking-widest
+          transition-transform duration-300 group-hover:rotate-3
+        "
+      >AA</span>
+
+      <span class="
+        font-semibold tracking-tight text-base leading-none
+        text-text-primary
+        transition-colors duration-200 group-hover:text-interaction-link-hover
+      ">
+        ABRAHAM ASAREL
+        <span class="block text-[10px] font-normal tracking-[0.2em] uppercase text-text-secondary mt-[2px]">
+          UX &amp; Product Designer
+        </span>
+      </span>
+    </a>
+
+    <!-- ── NAVEGACIÓN DESKTOP ── -->
+    <nav
+      aria-label="Navegación principal"
+      class="hidden md:flex items-center gap-1"
+    >
+      {navLinks.map((link) => {
+        const isActive = currentPath === link.href ||
+                         (link.href !== "/" && currentPath.startsWith(link.href));
+        return (
+          <a
+            href={link.href}
+            class:list={[
+              "relative px-3 py-1.5 text-sm tracking-wide transition-colors duration-200 rounded-sm",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-interaction-focus-ring",
+              isActive
+                ? "text-interaction-link-hover font-medium"
+                : "text-text-secondary hover:text-interaction-link-hover",
+            ]}
+          >
+            {link.label}
+            {/* Subrayado activo */}
+            {isActive && (
+              <span
+                aria-hidden="true"
+                class="
+                  absolute bottom-0 left-3 right-3 h-px
+                  bg-accent-amber rounded-full
+                "
+              />
+            )}
+          </a>
+        );
+      })}
+
+      <!-- Separador visual -->
+      <span aria-hidden="true" class="w-px h-4 bg-bg-tertiary mx-2" />
+
+      <!-- Botón Sol / Luna -->
+      <button
+        id="theme-toggle"
+        aria-label="Cambiar modo de color"
+        title="Cambiar modo de color"
+        class="
+          w-9 h-9 rounded-sm
+          flex items-center justify-center
+          text-text-secondary hover:text-interaction-link-hover
+          hover:bg-bg-secondary
+          transition-all duration-200
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-interaction-focus-ring
+        "
+      >
+        <!-- Ícono Sol (visible en modo oscuro) -->
+        <svg
+          id="icon-sun"
+          xmlns="http://www.w3.org/2000/svg"
+          width="18" height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          class="hidden"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+        </svg>
+        <!-- Ícono Luna (visible en modo claro) -->
+        <svg
+          id="icon-moon"
+          xmlns="http://www.w3.org/2000/svg"
+          width="18" height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+        </svg>
+      </button>
+    </nav>
+
+    <!-- ── CONTROLES MÓVILES ── -->
+    <div class="flex md:hidden items-center gap-2">
+
+      <!-- Botón Sol / Luna (móvil) -->
+      <button
+        id="theme-toggle-mobile"
+        aria-label="Cambiar modo de color"
+        title="Cambiar modo de color"
+        class="
+          w-9 h-9 rounded-sm
+          flex items-center justify-center
+          text-text-secondary hover:text-interaction-link-hover
+          transition-colors duration-200
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-interaction-focus-ring
+        "
+      >
+        <svg id="icon-sun-mobile" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"/>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+        </svg>
+        <svg id="icon-moon-mobile" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+        </svg>
+      </button>
+
+      <!-- Botón Hamburguesa -->
+      <button
+        id="menu-toggle"
+        aria-label="Abrir menú de navegación"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        class="
+          w-9 h-9 rounded-sm
+          flex flex-col items-center justify-center gap-[5px]
+          text-text-primary
+          hover:bg-bg-secondary
+          transition-colors duration-200
+          focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-interaction-focus-ring
+        "
+      >
+        <span id="ham-line-1" class="w-5 h-[1.5px] bg-current rounded-full transition-all duration-300 origin-center" />
+        <span id="ham-line-2" class="w-5 h-[1.5px] bg-current rounded-full transition-all duration-300" />
+        <span id="ham-line-3" class="w-5 h-[1.5px] bg-current rounded-full transition-all duration-300 origin-center" />
+      </button>
+    </div>
+
+  </div><!-- /max-w container -->
+
+  <!-- ── MENÚ MÓVIL (drawer) ── -->
+  <div
+    id="mobile-menu"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Menú de navegación móvil"
+    class="
+      md:hidden
+      overflow-hidden
+      max-h-0 opacity-0
+      transition-[max-height,opacity] duration-300 ease-in-out
+      bg-bg-primary border-t border-bg-tertiary
+    "
+  >
+    <nav
+      aria-label="Navegación móvil"
+      class="flex flex-col px-6 py-4 gap-1"
+    >
+      {navLinks.map((link) => {
+        const isActive = currentPath === link.href ||
+                         (link.href !== "/" && currentPath.startsWith(link.href));
+        return (
+          <a
+            href={link.href}
+            class:list={[
+              "py-3 px-3 text-sm tracking-wide rounded-sm border-b border-bg-tertiary last:border-0",
+              "transition-colors duration-200",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-interaction-focus-ring",
+              isActive
+                ? "text-interaction-link-hover font-medium"
+                : "text-text-secondary hover:text-interaction-link-hover",
+            ]}
+          >
+            {link.label}
+          </a>
+        );
+      })}
+    </nav>
+  </div>
+
+</header>
+
+<!-- Espaciador para compensar el header fixed -->
+<div class="h-16" aria-hidden="true" />
+
+
+<!-- ═══════════════════════════════════════════════════════════
+     SCRIPT — Hamburguesa + Dark Mode + localStorage
+     (módulo para scope seguro, sin conflictos globales)
+════════════════════════════════════════════════════════════ -->
+<script>
+  // ── Utilidad: aplicar tema ──────────────────────────────────
+  function applyTheme(isDark: boolean): void {
+    const html = document.documentElement;
+    if (isDark) {
+      html.classList.add("dark");
+    } else {
+      html.classList.remove("dark");
+    }
+    updateThemeIcons(isDark);
+  }
+
+  function updateThemeIcons(isDark: boolean): void {
+    // Desktop
+    document.getElementById("icon-sun")?.classList.toggle("hidden", !isDark);
+    document.getElementById("icon-moon")?.classList.toggle("hidden", isDark);
+    // Móvil
+    document.getElementById("icon-sun-mobile")?.classList.toggle("hidden", !isDark);
+    document.getElementById("icon-moon-mobile")?.classList.toggle("hidden", isDark);
+  }
+
+  // ── Inicialización del tema ─────────────────────────────────
+  // Prioridad: localStorage → preferencia del sistema operativo
+  function initTheme(): void {
+    const saved = localStorage.getItem("theme");
+    let isDark: boolean;
+
+    if (saved === "dark") {
+      isDark = true;
+    } else if (saved === "light") {
+      isDark = false;
+    } else {
+      // Sin preferencia guardada → respetar el SO
+      isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    }
+
+    applyTheme(isDark);
+  }
+
+  // ── Toggle tema ─────────────────────────────────────────────
+  function toggleTheme(): void {
+    const isDark = document.documentElement.classList.contains("dark");
+    const next = !isDark;
+    localStorage.setItem("theme", next ? "dark" : "light");
+    applyTheme(next);
+  }
+
+  // ── Hamburguesa ─────────────────────────────────────────────
+  function initMobileMenu(): void {
+    const btn   = document.getElementById("menu-toggle");
+    const menu  = document.getElementById("mobile-menu");
+    const line1 = document.getElementById("ham-line-1");
+    const line2 = document.getElementById("ham-line-2");
+    const line3 = document.getElementById("ham-line-3");
+
+    if (!btn || !menu) return;
+
+    btn.addEventListener("click", () => {
+      const isOpen = btn.getAttribute("aria-expanded") === "true";
+
+      if (isOpen) {
+        // Cerrar
+        btn.setAttribute("aria-expanded", "false");
+        btn.setAttribute("aria-label", "Abrir menú de navegación");
+        menu.style.maxHeight = "0px";
+        menu.style.opacity   = "0";
+        // Restaurar líneas hamburguesa
+        line1?.style.removeProperty("transform");
+        line2?.style.removeProperty("opacity");
+        line3?.style.removeProperty("transform");
+      } else {
+        // Abrir — calcular altura real del contenido
+        btn.setAttribute("aria-expanded", "true");
+        btn.setAttribute("aria-label", "Cerrar menú de navegación");
+        menu.style.maxHeight = menu.scrollHeight + "px";
+        menu.style.opacity   = "1";
+        // Animar a X
+        if (line1) line1.style.transform = "translateY(6.5px) rotate(45deg)";
+        if (line2) line2.style.opacity   = "0";
+        if (line3) line3.style.transform = "translateY(-6.5px) rotate(-45deg)";
+      }
+    });
+
+    // Cerrar menú al hacer clic en un link
+    menu.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        btn.setAttribute("aria-expanded", "false");
+        menu.style.maxHeight = "0px";
+        menu.style.opacity   = "0";
+        line1?.style.removeProperty("transform");
+        line2?.style.removeProperty("opacity");
+        line3?.style.removeProperty("transform");
+      });
+    });
+  }
+
+  // ── Header scroll shadow ────────────────────────────────────
+  function initScrollBehavior(): void {
+    const header = document.getElementById("site-header");
+    if (!header) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        header.classList.toggle("shadow-sm", !entry.isIntersecting);
+      },
+      { threshold: 1, rootMargin: "-1px 0px 0px 0px" }
+    );
+
+    // Observar un sentinel invisible al top del documento
+    const sentinel = document.createElement("div");
+    sentinel.style.cssText = "position:fixed;top:0;left:0;width:1px;height:1px;pointer-events:none";
+    document.body.prepend(sentinel);
+    observer.observe(sentinel);
+  }
+
+  // ── Eventos de botones de tema ──────────────────────────────
+  document.getElementById("theme-toggle")
+    ?.addEventListener("click", toggleTheme);
+  document.getElementById("theme-toggle-mobile")
+    ?.addEventListener("click", toggleTheme);
+
+  // ── Boot ────────────────────────────────────────────────────
+  initTheme();
+  initMobileMenu();
+  initScrollBehavior();
+
+  // Compatibilidad con View Transitions de Astro
+  document.addEventListener("astro:after-swap", () => {
+    initTheme();
+    initMobileMenu();
+  });
+</script>

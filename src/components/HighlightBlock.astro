@@ -1,0 +1,50 @@
+---
+// =========================================================================
+// ABRAHAM DESIGN SYSTEM — COMPONENTE MAESTRO: HighlightBlock.astro
+// =========================================================================
+// Propósito: Bloque destacado universal. 
+// - type="alert": Línea vertical recta pura de acento (para dolores/restricciones).
+// - type="neutral": Línea vertical recta pura en escala de grises (para insights).
+
+interface Props {
+  type?: 'neutral' | 'alert'; // Comportamiento semántico
+  tag?: string;                // Micro-indexador superior en tipografía Mono
+  title: string;              // Título descriptivo principal
+}
+
+const { type = 'neutral', tag, title } = Astro.props;
+
+const isAlert = type === 'alert';
+const borderClasses = isAlert 
+  ? "border-l-2 border-text-accent" 
+  : "border-l-2 border-text-primary/20";
+---
+
+<div class={`w-full p-5 md:p-6 bg-text-primary/[0.015] ${borderClasses} rounded-r-xl flex flex-col gap-2.5 my-6 shadow-sm`}>
+  
+  <div class="flex flex-col gap-1">
+    {tag && (
+      <span class="font-mono text-[9px] uppercase tracking-[0.2em] text-text-primary/40 font-medium">
+        {tag}
+      </span>
+    )}
+
+    <h3 class="font-display font-semibold text-[16px] leading-[22px] text-text-primary tracking-tight">
+      {title}
+    </h3>
+  </div>
+
+  <div class="w-full text-sm font-sans text-text-primary/70 highlight-content-box">
+    <slot />
+  </div>
+</div>
+
+<style is:global>
+  /* Reseteo interno para forzar la consistencia tipográfica del slot */
+  .highlight-content-box p {
+    font-size: 14px !important;
+    line-height: 22px !important;
+    color: color-mix(in srgb, var(--color-text-primary) 70%, transparent) !important;
+    margin: 0 !important;
+  }
+</style>
