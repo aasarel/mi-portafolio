@@ -3,8 +3,11 @@
 // ABRAHAM DESIGN SYSTEM — COMPONENTE MAESTRO: ImageGrid.astro
 // =========================================================================
 
+import { Image, getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
 interface ImageItem {
-  src: string;
+  src: ImageMetadata;
   alt: string;
 }
 
@@ -17,41 +20,54 @@ const total = images.length;
 
 const isCinematic = total === 6 || total === 8;
 
+// Pre-genera URLs full-res para el href de PhotoSwipe.
+// getImage() procesa la imagen sin renderizar un <img> — nos da la URL
+// y las dimensiones reales para que PhotoSwipe abra la versión original.
+const fullResImages = await Promise.all(
+  images.map(img => getImage({ src: img.src, format: 'webp' }))
+);
+
 let wrapperClasses = "mx-auto max-w-[1920px] px-6 md:px-12 lg:px-[128px] my-16";
 let gridClasses = "";
+let sizes = "(max-width: 640px) calc(100vw - 48px), calc(50vw - 96px)";
 
 if (total === 2) {
   gridClasses = "grid-cols-1 md:grid-cols-2 gap-6 md:gap-8";
+  sizes = "(max-width: 768px) calc(100vw - 48px), calc(50vw - 96px)";
 } else if (total === 4) {
   gridClasses = "grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 max-w-[1200px] mx-auto";
+  sizes = "(max-width: 640px) calc(100vw - 48px), calc(50vw - 64px)";
 } else if (total === 6) {
   wrapperClasses = "w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] px-6 md:px-12 lg:px-[128px] my-24";
   gridClasses = "grid-cols-2 md:grid-cols-3 gap-4 md:gap-6";
+  sizes = "(max-width: 640px) calc(50vw - 32px), (max-width: 1024px) calc(33vw - 32px), calc(33vw - 64px)";
 } else if (total === 8) {
   wrapperClasses = "w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] px-6 md:px-12 lg:px-[128px] my-24";
   gridClasses = "grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6";
+  sizes = "(max-width: 640px) calc(50vw - 32px), (max-width: 1280px) calc(25vw - 32px), calc(25vw - 64px)";
 }
 ---
 
 <div class={wrapperClasses}>
-  
-  {/* Agregamos el ID de la galería para que PhotoSwipe lo reconozca */}
+
   <div class={`grid ${gridClasses} w-full`} id="project-gallery">
-    {images.map((img) => (
-      
-      /* CÁPSULA COHESIVA DE IMAGEN (Ahora es una etiqueta <a> interactiva) */
-      <a 
-        href={img.src} 
-        data-pswp-width="1920" 
-        data-pswp-height="1080"
+    {images.map((img, i) => (
+
+      <a
+        href={fullResImages[i].src}
+        data-pswp-width={fullResImages[i].attributes.width}
+        data-pswp-height={fullResImages[i].attributes.height}
         target="_blank"
         class="relative w-full aspect-video rounded-xl overflow-hidden bg-bg-secondary border border-text-primary/5 shadow-md group/grid-card block cursor-zoom-in pswp-gallery-item"
       >
-        <img 
-          src={img.src} 
-          alt={img.alt} 
-          class="w-full h-full object-cover transition-transform duration-700 ease-out-silk group-hover/grid-card:scale-105" 
+        <Image
+          src={img.src}
+          alt={img.alt}
+          widths={[400, 800, 1200, 1920]}
+          sizes={sizes}
+          class="w-full h-full object-contain transition-transform duration-700 ease-out-silk group-hover/grid-card:scale-105"
           loading="lazy"
+          decoding="async"
         />
         <div class="absolute inset-0 bg-black/[0.03] dark:bg-black/[0.15] pointer-events-none transition-colors duration-300 group-hover/grid-card:bg-transparent"></div>
       </a>
@@ -68,41 +84,14 @@ if (total === 2) {
 </style>
 
 <script>
-  // Importamos PhotoSwipe y sus estilos CSS base
   import PhotoSwipeLightbox from 'photoswipe/lightbox';
   import 'photoswipe/style.css';
 
-  // 1. Script para autodetectar las medidas reales de las imágenes sin tener que declararlas
-  const updateImageDimensions = () => {
-    const items = document.querySelectorAll('.pswp-gallery-item');
-    items.forEach(item => {
-      const img = item.querySelector('img');
-      if (img) {
-        const setDimensions = () => {
-          if(img.naturalWidth && img.naturalHeight) {
-             item.setAttribute('data-pswp-width', img.naturalWidth.toString());
-             item.setAttribute('data-pswp-height', img.naturalHeight.toString());
-          }
-        };
-        // Si ya cargó la imagen, setea las medidas. Si no, espera a que cargue.
-        if (img.complete) {
-          setDimensions();
-        } else {
-          img.addEventListener('load', setDimensions);
-        }
-      }
-    });
-  };
-
-  // 2. Inicializamos PhotoSwipe
   const initLightbox = () => {
-    updateImageDimensions();
-    
     const lightbox = new PhotoSwipeLightbox({
       gallery: '#project-gallery',
       children: 'a',
       pswpModule: () => import('photoswipe'),
-      // Configuración estética (fondos oscuros elegantes)
       bgOpacity: 0.9,
       errorMsg: 'La imagen no pudo ser cargada',
     });
@@ -110,8 +99,6 @@ if (total === 2) {
     lightbox.init();
   };
 
-  // Ejecutamos en la carga de la página
   document.addEventListener('DOMContentLoaded', initLightbox);
-  // Soporte para las transiciones de vista de Astro (View Transitions)
   document.addEventListener('astro:page-load', initLightbox);
 </script>

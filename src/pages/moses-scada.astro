@@ -16,8 +16,8 @@ import EditorialBody from '../components/EditorialBody.astro';
 import MetricCard from '../components/MetricCard.astro';
 
 // Importación nativa de Assets desde src/assets/ para procesamiento y optimización de Astro v6
-import imgAntes from '../assets/projects/moses/slider-antes.png';
-import imgDespues from '../assets/projects/moses/slider-despues.jpg';
+import imgAntes from '../assets/projects/moses/slider-antes.webp';
+import imgDespues from '../assets/projects/moses/slider-despues.webp';
 import ImageGrid from '../components/ImageGrid.astro';
 import ProjectFooter from '../components/ProjectFooter.astro';
 
@@ -144,8 +144,8 @@ const caseStudySteps = [
 
           <ImageGrid
             images={[
-              { src: imgAntes.src, alt: 'Sistema MOSES-SCADA original: interfaz heredada con alta carga cognitiva y saturación visual tipo Windows XP' },
-              { src: imgDespues.src, alt: 'Sistema MOSES-SCADA rediseñado: interfaz ISA-101 con esquema oscuro, jerarquía visual y codificación cromática funcional' }
+              { src: imgAntes, alt: 'Sistema MOSES-SCADA original: interfaz heredada con alta carga cognitiva y saturación visual tipo Windows XP' },
+              { src: imgDespues, alt: 'Sistema MOSES-SCADA rediseñado: interfaz ISA-101 con esquema oscuro, jerarquía visual y codificación cromática funcional' }
             ]}
           />
 

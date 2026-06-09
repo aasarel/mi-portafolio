@@ -3,6 +3,8 @@
 // Menú superior — Portfolio UX & Product Designer
 // Tailwind v4 + tokens desde global.css + dark mode via .dark en <html>
 
+import owlLogo from '../assets/logos/owl.svg';
+
 const navLinks = [
   { label: "Inicio",        href: "/" },
   { label: "Proyectos",     href: "/#portafolio" },
@@ -36,17 +38,22 @@ const currentPath = Astro.url.pathname;
       "
       aria-label="Ir al inicio"
     >
-      <!-- Monograma decorativo -->
+      <!-- Logo Owl — círculo con fondo accent-forest, buho en blanco -->
       <span
         aria-hidden="true"
         class="
-          w-8 h-8 rounded-sm
-          bg-accent-amber
-          flex items-center justify-center
-          text-bg-primary text-xs font-bold tracking-widest
+          w-9 h-9 rounded-full
+          bg-accent-forest
+          flex items-center justify-center shrink-0
           transition-transform duration-300 group-hover:rotate-3
         "
-      >AA</span>
+      >
+        <img
+          src={owlLogo.src}
+          alt=""
+          class="w-4 brightness-0 invert"
+        />
+      </span>
 
       <span class="
         font-semibold tracking-tight text-base leading-none
@@ -54,7 +61,7 @@ const currentPath = Astro.url.pathname;
         transition-colors duration-200 group-hover:text-interaction-link-hover
       ">
         ABRAHAM ASAREL
-        <span class="block text-[10px] font-normal tracking-[0.2em] uppercase text-text-secondary mt-[2px]">
+        <span class="block text-[10px] font-normal tracking-[0.2em] uppercase text-text-link mt-[2px] py-1">
           UX &amp; Product Designer
         </span>
       </span>
@@ -237,7 +244,7 @@ const currentPath = Astro.url.pathname;
 </header>
 
 <!-- Espaciador para compensar el header fixed -->
-<div class="h-16" aria-hidden="true" />
+<div class="h-8" aria-hidden="true" />
 
 
 <!-- ═══════════════════════════════════════════════════════════

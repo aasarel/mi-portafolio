@@ -1,4 +1,12 @@
 ---
+// ProjectFooter.astro — Pie de página para las páginas de caso de estudio.
+// Dos bloques:
+//   1. CTA central — invita al visitante a contactar; su texto y href son configurables
+//      para que cada caso pueda tener un llamado a la acción personalizado.
+//   2. Navegación entre proyectos — filas prevProject / nextProject opcionales.
+//      Si un lado no se pasa, ese lado renderiza un <div /> vacío para mantener
+//      el layout flex justify-between equilibrado.
+
 interface NavItem {
   label: string;
   href: string;

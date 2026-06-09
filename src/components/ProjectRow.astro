@@ -1,54 +1,59 @@
 ---
 // src/components/ProjectRow.astro
 
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
 interface Props {
-  id?: string;        // Hacemos el ID opcional con ?
+  id?: string;
   title: string;
   description: string;
   link: string;
   platform: string;
-  images: string[];
-  activeIndex?: number; // Añadimos activeIndex como opcional
+  images: Array<ImageMetadata | string>;
+  activeIndex?: number;
 }
 
-// Desestructuración con valores por defecto
-const { 
-  id = "default-project", 
-  title, 
-  description, 
-  link, 
-  platform, 
-  images, 
-  activeIndex = 0 
+const {
+  id = "default-project",
+  title,
+  description,
+  link,
+  platform,
+  images,
 } = Astro.props;
 ---
 
-<div 
+<div
   class="w-full border-b border-text-primary/10 py-16 bg-bg-primary text-text-primary project-row-container"
   data-project-id={id}
 >
   <div class="mx-auto max-w-[1552px] px-6 md:px-12 lg:px-[128px] flex flex-col gap-8">
-    
+
     <div class="w-full flex flex-col gap-4 relative">
-      <div 
-        class="relative w-full aspect-[1296/549] bg-bg-secondary rounded overflow-hidden border border-text-primary/10 group carousel-viewport focus:outline-none transition-all duration-300 data-[keyboard-focus=true]:ring-2 data-[keyboard-focus=true]:ring-text-primary/40 data-[keyboard-focus=true]:ring-offset-4 data-[keyboard-focus=true]:ring-offset-bg-primary"
+      <div
+        class="relative w-full aspect-[1296/549] bg-bg-primary rounded overflow-hidden group carousel-viewport focus:outline-none transition-all duration-300 data-[keyboard-focus=true]:ring-2 data-[keyboard-focus=true]:ring-text-primary/40 data-[keyboard-focus=true]:ring-offset-4 data-[keyboard-focus=true]:ring-offset-bg-primary"
         tabindex="0"
         role="region"
         aria-roledescription="carousel"
         aria-label={`Galería de imágenes de ${title}`}
         data-keyboard-focus="false"
       >
-        
+
         <div class="absolute inset-0 flex items-center justify-center text-text-primary/[0.03] pointer-events-none select-none z-0">
-          <span class="text-[180px] md:text-[240px] font-mono">🦉</span>
+          <span class="text-[180px] md:text-[240px] font-mono"></span>
         </div>
-        
+
         <div class="absolute inset-0 z-10 w-full h-full pointer-events-none">
           {images.map((imgSrc, index) => (
-            <img 
-              src={imgSrc} 
+            <Image
+              src={imgSrc as any}
+              width={1060}
+              height={632}
               alt={`Captura de ${title} - Imagen ${index + 1}`}
-              class={`absolute inset-0 w-full h-full object-cover grayscale contrast-110 group-hover:grayscale-0 transition-all duration-[750ms] ease-out-apple ${index === 0 ? 'opacity-100 scale-100' : 'opacity-0 scale-[0.98]'}`}
+              class={`absolute inset-0 w-full h-full object-contain transition-all duration-[1000ms] ease-out-apple ${index === 0 ? 'opacity-100 scale-100' : 'opacity-0 scale-[0.98]'}`}
+              loading={index === 0 ? 'eager' : 'lazy'}
+              decoding="async"
               data-index={index}
             />
           ))}
@@ -65,7 +70,7 @@ const {
           Pausado
         </div>
       </div>
-      
+
       <div class="flex gap-2 w-full indicators-wrapper">
         {images.map((_, index) => (
           <button class="py-3 flex-grow cursor-pointer focus:outline-none" data-to-index={index} aria-label={`Ir a la imagen ${index + 1}`} aria-current={index === 0 ? "true" : "false"}>
@@ -105,7 +110,6 @@ const {
 </style>
 
 <script>
-  // DETECTOR ULTRA-ESTRICTO DE NAVEGACIÓN POR TECLADO
   let isTabNavigation = false;
 
   window.addEventListener('keydown', (e) => {
@@ -121,22 +125,22 @@ const {
     rows.forEach((row) => {
       const images = row.querySelectorAll('.carousel-viewport img');
       const indicatorsButtons = row.querySelectorAll('.indicators-wrapper button');
-      const viewport = row.querySelector('.carousel-viewport') as HTMLElement; // Aseguramos tipado básico
+      const viewport = row.querySelector('.carousel-viewport') as HTMLElement;
       const arrowLeft = row.querySelector('.nav-arrow-left');
       const arrowRight = row.querySelector('.nav-arrow-right');
       const pauseIndicator = row.querySelector('.pause-indicator');
-      
+
       let currentIndex = 0;
       const total = images.length;
-      let intervalId = null;
+      let intervalId: ReturnType<typeof setInterval> | null = null;
       let isPaused = false;
       const autoplayTime = 4000;
 
-      function goToIndex(nextIndex) {
+      function goToIndex(nextIndex: number) {
         if (nextIndex < 0) nextIndex = total - 1;
         if (nextIndex >= total) nextIndex = 0;
         currentIndex = nextIndex;
-        
+
         images.forEach((img, idx) => {
           if (idx === currentIndex) {
             img.classList.remove('opacity-0', 'scale-[0.98]');
@@ -151,11 +155,11 @@ const {
           btn.setAttribute('aria-current', idx === currentIndex ? 'true' : 'false');
           const bar = btn.querySelector('div');
           if (idx === currentIndex) {
-            bar.classList.remove('bg-text-primary/20');
-            bar.classList.add('bg-text-primary');
+            bar?.classList.remove('bg-text-primary/20');
+            bar?.classList.add('bg-text-primary');
           } else {
-            bar.classList.remove('bg-text-primary');
-            bar.classList.add('bg-text-primary/20');
+            bar?.classList.remove('bg-text-primary');
+            bar?.classList.add('bg-text-primary/20');
           }
         });
       }
@@ -167,11 +171,11 @@ const {
         isPaused = !isPaused;
         if (isPaused) {
           stopAutoplay();
-          pauseIndicator.classList.remove('opacity-0');
-          pauseIndicator.classList.add('opacity-100');
+          pauseIndicator?.classList.remove('opacity-0');
+          pauseIndicator?.classList.add('opacity-100');
         } else {
-          pauseIndicator.classList.remove('opacity-100');
-          pauseIndicator.classList.add('opacity-0');
+          pauseIndicator?.classList.remove('opacity-100');
+          pauseIndicator?.classList.add('opacity-0');
           startAutoplay();
         }
       }
@@ -184,12 +188,11 @@ const {
       indicatorsButtons.forEach((btn) => {
         btn.addEventListener('click', (e) => {
           e.stopPropagation();
-          const targetIndex = parseInt(btn.getAttribute('data-to-index'));
+          const targetIndex = parseInt(btn.getAttribute('data-to-index') ?? '0');
           goToIndex(targetIndex);
         });
       });
 
-      // BLINDAJE VISUAL: Solo activamos el anillo flotante si el foco llegó mediante la tecla TAB
       viewport?.addEventListener('focus', () => {
         if (isTabNavigation) {
           viewport.setAttribute('data-keyboard-focus', 'true');
@@ -210,13 +213,13 @@ const {
         const noForeignFocus = !document.activeElement || document.activeElement === document.body || row.contains(document.activeElement);
 
         if (hasFocus || (isCentered && noForeignFocus)) {
-          e.preventDefault(); 
+          e.preventDefault();
           if (e.key === 'ArrowLeft') goToIndex(currentIndex - 1);
           if (e.key === 'ArrowRight') goToIndex(currentIndex + 1);
         }
       });
 
-      let wheelTimeout = null;
+      let wheelTimeout: ReturnType<typeof setTimeout> | null = null;
       viewport?.addEventListener('wheel', (e) => {
         if (Math.abs(e.deltaX) > 30) {
           e.preventDefault();

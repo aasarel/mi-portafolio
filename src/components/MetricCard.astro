@@ -1,4 +1,15 @@
 ---
+// MetricCard.astro — Tarjeta métrica expandible para secciones de impacto en casos de estudio.
+// Al hacer clic abre un modal (dialog accesible) con el label completo y su descripción.
+//
+// Anatomía del modal:
+//   · .metric-modal  — contenedor fixed con z-[100], invisible hasta apertura (pointer-events-none)
+//   · .metric-backdrop — overlay semitransparente con blur; clic fuera = cierra modal
+//   · .metric-panel   — tarjeta centrada con transición opacity + translateY para entrada suave
+//
+// El bloqueo de scroll (body overflow:hidden) evita que la página de fondo se desplace
+// mientras el modal está abierto.
+
 interface Props {
   label: string;
   description?: string;

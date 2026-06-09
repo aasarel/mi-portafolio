@@ -1,4 +1,12 @@
 ---
+// ConstruccionLayout.astro — Página de marcador de posición para secciones aún no desarrolladas.
+// Muestra un estado visual limpio ("en construcción") con navegación de regreso al portafolio.
+//
+// Props:
+//   section — Nombre de la sección (ej. "Arte Visual"). Aparece en el <title> y en el copy.
+//   code    — Código HTTP de estilo developercore que se muestra sobre el título.
+//             Por defecto "200 OK"; se puede pasar "202 Accepted" para secciones en proceso.
+
 import Layout from './Layout.astro';
 
 interface Props {

@@ -1,8 +1,10 @@
 ---
-// ==========================================
-// IMPORTACIONES E INTERFACES DE LA MATRIZ
-// ==========================================
-import Layout from './Layout.astro'; 
+// ProjectLayout.astro — Layout base para páginas de caso de estudio
+// Envuelve el Layout global e inyecta el header editorial del proyecto:
+// enlace "Volver", título, subtítulo y fila de metadatos (Rol / Duración / Empresa).
+// El contenido de cada página de caso se entrega via <slot />.
+
+import Layout from './Layout.astro';
 
 interface Props {
   title: string;     // Título de impacto del caso de estudio
@@ -12,43 +14,62 @@ interface Props {
   company: string;   // Empresa o cliente final
 }
 
-// Extracción de las propiedades enviadas a la matriz
 const { title, subtitle, role, duration, company } = Astro.props;
 ---
 
+<!-- El meta <title> de la página se genera como "Nombre — Case Study" -->
 <Layout title={`${title} — Case Study`}>
+
+  <!-- scroll-mt-96 da margen superior al ancla #inicio usada por
+       ReadingProgress cuando el usuario regresa al tope de la página -->
   <main id="inicio" class="w-full bg-bg-primary text-text-primary min-h-screen pt-12 md:pt-16 pb-32 relative scroll-mt-96">
-    
+
+    <!-- ── Header editorial del caso de estudio ───────────────────────────
+         Estructura de tres capas:
+           1. Botón "Volver" — posicionado absolute en md+ para no
+              descentrar el título (permanece en flujo en móvil)
+           2. Título + subtítulo centrados
+           3. Fila de metadatos: Rol · Duración · Empresa
+    ──────────────────────────────────────────────────────────────────── -->
     <header class="w-full mb-12">
       <div class="mx-auto max-w-[1920px] px-6 md:px-12 lg:px-[128px]">
-        
+
         <div class="w-full border-b border-text-accent/20 pb-2">
           <div class="w-full flex flex-col gap-10">
-            
+
+            <!-- Contenedor del título: relative para anclar el botón "Volver"
+                 en absolute sin desplazar el bloque central -->
             <div class="w-full flex flex-col items-center text-center relative justify-center">
-              
+
+              <!-- Botón "Volver" — md:absolute lo saca del flujo para que
+                   el título quede genuinamente centrado en pantallas anchas -->
               <div class="w-full md:w-auto text-left md:absolute md:left-0 md:top-2 mb-6 md:mb-0">
-                <a 
+                <a
                   href="/#portafolio"
                   class="inline-flex items-center font-mono text-xs uppercase tracking-[0.2em] text-text-primary/60 hover:text-text-accent transition-colors duration-300 group focus:outline-none focus-visible:ring-2 focus-visible:ring-text-accent/40 rounded p-1"
                 >
-                  <span class="transform translate-x-0 group-hover:-translate-x-1.5 transition-transform duration-300 mr-2">←</span> 
+                  <span class="transform translate-x-0 group-hover:-translate-x-1.5 transition-transform duration-300 mr-2">←</span>
                   Volver
                 </a>
               </div>
 
+              <!-- Título del caso -->
               <h1 class="font-display font-semibold text-[32px] md:text-[48px] leading-[34px] md:leading-[56px] tracking-[-0.01em] text-text-primary w-full max-w-[900px] mb-4">
                 {title}
               </h1>
-              
+
+              <!-- Subtítulo: text-wrap:balance distribuye el texto en líneas
+                   visualmente equilibradas (evita líneas muy cortas al final) -->
               <p class="font-display font-medium text-[22px] md:text-[28px] leading-[30px] md:leading-[36px] tracking-[-0.01em] text-text-primary/50 max-w-[760px] [text-wrap:balance]">
                 {subtitle}
               </p>
             </div>
 
-            {/* Cada bloque de metadato (rol, duración, empresa) se adapta responsivamente a filas o columnas según el viewport, manteniendo jerarquía visual y legibilidad */}
+            <!-- Fila de metadatos — en móvil cada dato ocupa una fila horizontal
+                 con separador inferior; en md+ se alinean en columna vertical con
+                 gap fijo de 102px para mantener el ritmo del diseño -->
             <div class="w-full max-w-[669px] mx-auto flex flex-col md:flex-row gap-3 md:gap-[102px] items-center justify-center pb-0 md:pb-6">
-              
+
               <div class="flex flex-row md:flex-col justify-between md:justify-start items-center w-full md:w-auto border-b border-text-primary/[0.06] md:border-none pb-2 md:pb-0 gap-1.5 text-center min-w-[120px]">
                 <span class="font-mono text-[12px] uppercase tracking-[0.2em] text-text-accent">Rol</span>
                 <span class="font-sans text-[14px] md:text-[15px] font-normal leading-normal text-text-primary/90">{role}</span>
@@ -71,6 +92,7 @@ const { title, subtitle, role, duration, company } = Astro.props;
       </div>
     </header>
 
+    <!-- Contenido del caso de estudio inyectado por la página hija -->
     <div class="w-full">
       <slot />
     </div>
