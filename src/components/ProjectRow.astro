@@ -1,17 +1,43 @@
 ---
-// src/components/ProjectRow.astro
+// =========================================================================
+// ABRAHAM DESIGN SYSTEM — COMPONENTE: ProjectRow.astro
+// =========================================================================
+// Propósito: Fila de entrada para el listado de proyectos (/proyectos).
+// Cada instancia representa un caso de estudio completo con:
+//   · Carrusel de imágenes con autoplay, pausa interactiva y navegación múltiple
+//   · Indicadores de progreso (barras) sincronizados con el slide activo
+//   · Metadatos del proyecto: título, plataforma y descripción en grid 12 cols
+//   · Enlace CTA de texto al detalle del proyecto
+//
+// Formas de navegar el carrusel:
+//   1. Autoplay — cicla cada 4 s; se pausa en hover o al hacer clic en el viewport
+//   2. Flechas — botones izq/der que aparecen solo en hover
+//   3. Indicadores inferiores — barras clicables, una por cada slide
+//   4. Teclado ← → — activo cuando el foco está en el row o cuando está centrado en viewport
+//   5. Swipe táctil — threshold de 50 px entre touchstart y touchend
+//   6. Scroll horizontal (wheel deltaX > 30) — con debounce de 600 ms para evitar saltos
+//
+// Accesibilidad:
+//   · role="region" + aria-roledescription="carousel" en el viewport
+//   · data-keyboard-focus: anillo de foco visible SOLO cuando la navegación llega por Tab
+//   · aria-current en cada indicador para anunciar el slide activo a lectores de pantalla
+//
+// Patrón de pausa:
+//   · Hover suspende el autoplay sin marcar isPaused → reanuda al salir del área
+//   · Clic en el viewport alterna isPaused y muestra/oculta la etiqueta "Pausado"
+// =========================================================================
 
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 
 interface Props {
-  id?: string;
-  title: string;
-  description: string;
-  link: string;
-  platform: string;
-  images: Array<ImageMetadata | string>;
-  activeIndex?: number;
+  id?: string;                          // ID único del proyecto — aísla la lógica JS entre rows
+  title: string;                        // Título de impacto del caso de estudio
+  description: string;                  // Resumen editorial (2–3 líneas)
+  link: string;                         // Ruta interna al detalle del caso (ej. "/moses-scada")
+  platform: string;                     // Herramienta o entorno principal (ej. "SIMATIC WinCC 8.1")
+  images: Array<ImageMetadata | string>; // 1–N imágenes; ImageMetadata genera srcset automático
+  activeIndex?: number;                 // Slide inicial (reservado; el carrusel siempre arranca en 0)
 }
 
 const {
@@ -22,15 +48,31 @@ const {
   platform,
   images,
 } = Astro.props;
+
+const colonIdx = title.indexOf(':');
+const titleBold = colonIdx !== -1 ? title.slice(0, colonIdx) : title;
+const titleRest = colonIdx !== -1 ? title.slice(colonIdx) : '';
 ---
 
+<!-- ══════════════════════════════════════════════════════════════
+     FILA DE PROYECTO — Contenedor raíz
+     reveal: la animación de entrada la gestiona el IntersectionObserver
+     en Layout.astro (clase .is-visible añadida al entrar al viewport)
+══════════════════════════════════════════════════════════════ -->
 <div
-  class="w-full border-b border-text-primary/10 py-16 bg-bg-primary text-text-primary project-row-container"
+  class="w-full border-b border-text-primary/10 py-20 md:py-8 bg-bg-primary text-text-primary project-row-container reveal"
   data-project-id={id}
 >
-  <div class="mx-auto max-w-[1552px] px-6 md:px-12 lg:px-[128px] flex flex-col gap-8">
+  <div class="mx-auto max-w-[1100px] px-6 md:px-8 flex flex-col gap-8">
 
+    <!-- ── Área del carrusel ──────────────────────────────────────────── -->
     <div class="w-full flex flex-col gap-4 relative">
+
+      <!-- Viewport del carrusel
+           · tabindex="0" permite llegar con Tab y usar ← → para cambiar slide
+           · data-keyboard-focus: controlado por JS — "true" solo cuando el foco
+             llega vía Tab, activando el ring visible de accesibilidad
+           · Clic en el viewport alterna la pausa persistente del autoplay -->
       <div
         class="relative w-full aspect-[1296/549] bg-bg-primary rounded overflow-hidden group carousel-viewport focus:outline-none transition-all duration-300 data-[keyboard-focus=true]:ring-2 data-[keyboard-focus=true]:ring-text-primary/40 data-[keyboard-focus=true]:ring-offset-4 data-[keyboard-focus=true]:ring-offset-bg-primary"
         tabindex="0"
@@ -40,10 +82,14 @@ const {
         data-keyboard-focus="false"
       >
 
+        <!-- Watermark decorativo — apenas visible (3% opacidad) -->
         <div class="absolute inset-0 flex items-center justify-center text-text-primary/[0.03] pointer-events-none select-none z-0">
           <span class="text-[180px] md:text-[240px] font-mono"></span>
         </div>
 
+        <!-- Imágenes del carrusel
+             El wrapper tiene la transición de scale; cada <Image> gestiona
+             su opacidad/scale individualmente. Solo index=0 se carga eager. -->
         <div class="absolute inset-0 z-10 w-full h-full pointer-events-none">
           {images.map((imgSrc, index) => (
             <Image
@@ -51,7 +97,7 @@ const {
               width={1060}
               height={632}
               alt={`Captura de ${title} - Imagen ${index + 1}`}
-              class={`absolute inset-0 w-full h-full object-contain transition-all duration-[1000ms] ease-out-apple ${index === 0 ? 'opacity-100 scale-100' : 'opacity-0 scale-[0.98]'}`}
+              class={`absolute inset-0 w-full h-full object-contain object-left transition-all duration-[1000ms] ease-out-apple ${index === 0 ? 'opacity-100 scale-100' : 'opacity-0 scale-[0.98]'}`}
               loading={index === 0 ? 'eager' : 'lazy'}
               decoding="async"
               data-index={index}
@@ -59,6 +105,8 @@ const {
           ))}
         </div>
 
+        <!-- Flechas de navegación — aparecen solo en hover, tabindex=-1 para
+             no interrumpir el flujo de foco (el viewport ya es focusable) -->
         <button class="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-bg-primary/20 to-transparent z-20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer nav-arrow-left" aria-label="Imagen anterior" tabindex="-1">
           <span class="text-2xl font-mono text-text-primary select-none pointer-events-none">←</span>
         </button>
@@ -66,35 +114,42 @@ const {
           <span class="text-2xl font-mono text-text-primary select-none pointer-events-none">→</span>
         </button>
 
-        <div class="absolute top-4 right-4 z-20 bg-bg-primary/80 backdrop-blur px-3 py-1 rounded text-[10px] font-mono uppercase tracking-widest opacity-0 transition-opacity duration-300 pause-indicator select-none pointer-events-none">
+        <!-- Etiqueta "Pausado" — visible solo cuando isPaused=true en JS -->
+        <div class="absolute top-4 left-4 z-20 bg-bg-primary/80 backdrop-blur px-3 py-1 rounded text-[10px] font-mono uppercase tracking-widest opacity-0 transition-opacity duration-300 pause-indicator select-none pointer-events-none">
           Pausado
         </div>
       </div>
 
+      <!-- Indicadores de progreso (barras)
+           Cada botón ocupa el ancho disponible (flex-grow implícito via flex).
+           aria-current anuncia al slide activo para lectores de pantalla. -->
       <div class="flex gap-2 w-full indicators-wrapper">
         {images.map((_, index) => (
-          <button class="py-3 flex-grow cursor-pointer focus:outline-none" data-to-index={index} aria-label={`Ir a la imagen ${index + 1}`} aria-current={index === 0 ? "true" : "false"}>
-            <div class={`h-1 w-full rounded transition-all duration-300 ${index === 0 ? 'bg-text-primary' : 'bg-text-primary/20'}`}></div>
+          <button class="py-3 flex- cursor-pointer focus:outline-none" data-to-index={index} aria-label={`Ir a la imagen ${index + 1}`} aria-current={index === 0 ? "true" : "false"}>
+            <div class={`h-0.5 w-7 rounded transition-all duration-300 ${index === 0 ? 'bg-text-primary' : 'bg-text-primary/20'}`}></div>
           </button>
         ))}
       </div>
     </div>
 
+    <!-- ── Metadatos del proyecto — grid 12 cols ─────────────────────── -->
+    <!-- Col 1–5: Título + plataforma / Col 6–12: Descripción + CTA -->
     <div class="w-full grid grid-cols-1 md:grid-cols-12 gap-[32px] pt-4">
-      <div class="col-span-12 md:col-span-5 text-left">
-        <h3 class="font-display text-2xl md:text-3xl font-bold tracking-tight text-text-primary leading-tight">
-          {title}
+      <div class="col-span-12 md:col-span-5 text-left flex flex-col justify-between">
+        <h3 class="font-display text-2xl md:text-3xl tracking-tight text-text-primary leading-tight">
+          <span class="font-bold">{titleBold}</span><span class="font-normal">{titleRest}</span>
         </h3>
         <p class="font-mono text-[10px] uppercase tracking-[0.2em] text-text-accent mt-2 font-medium">
           {platform}
         </p>
       </div>
 
-      <div class="col-span-12 md:col-span-7 flex flex-col gap-6 text-left">
+      <div class="col-span-12 md:col-span-7 flex flex-col gap-6 text-left justify-between">
         <p class="font-sans text-[15px] font-normal leading-[26px] text-text-primary/80">
           {description}
         </p>
         <div class="pt-2">
+          <!-- CTA de texto con flecha animada en hover -->
           <a href={link} class="inline-flex items-center font-mono text-xs uppercase tracking-[0.2em] text-text-primary hover:text-text-accent transition-colors duration-200 group/link">
             Ve el detalle del proyecto <span class="transform translate-x-0 group-hover/link:translate-x-1.5 transition-transform duration-200 ml-2">→</span>
           </a>
@@ -106,10 +161,14 @@ const {
 </div>
 
 <style>
+  /* Curva apple easing — más suave en entrada que ease-out estándar */
   .ease-out-apple { transition-timing-function: cubic-bezier(0.15, 1, 0.3, 1); }
 </style>
 
 <script>
+  // ── Detección de navegación por teclado ─────────────────────────────────
+  // isTabNavigation se activa con Tab y se resetea con mousedown.
+  // Controla si los viewports deben mostrar su ring de foco (accesibilidad).
   let isTabNavigation = false;
 
   window.addEventListener('keydown', (e) => {
@@ -120,6 +179,10 @@ const {
     isTabNavigation = false;
   }, { passive: true });
 
+  // ── Motor de carruseles ────────────────────────────────────────────────
+  // Se inicializa por cada .project-row-container en el DOM.
+  // Cada row tiene su propio estado (currentIndex, isPaused, intervalId)
+  // para que múltiples carruseles en la página sean completamente independientes.
   function initCarousels() {
     const rows = document.querySelectorAll('.project-row-container');
     rows.forEach((row) => {
@@ -136,6 +199,8 @@ const {
       let isPaused = false;
       const autoplayTime = 4000;
 
+      // Navega al slide nextIndex — hace wrap (0 ↔ total-1)
+      // Actualiza clases de opacidad en imágenes y estado de barras indicadoras
       function goToIndex(nextIndex: number) {
         if (nextIndex < 0) nextIndex = total - 1;
         if (nextIndex >= total) nextIndex = 0;
@@ -151,6 +216,7 @@ const {
           }
         });
 
+        // Sincronizar barras indicadoras y aria-current
         indicatorsButtons.forEach((btn, idx) => {
           btn.setAttribute('aria-current', idx === currentIndex ? 'true' : 'false');
           const bar = btn.querySelector('div');
@@ -167,6 +233,8 @@ const {
       function startAutoplay() { if (!isPaused) { intervalId = setInterval(() => goToIndex(currentIndex + 1), autoplayTime); } }
       function stopAutoplay() { if (intervalId) clearInterval(intervalId); }
 
+      // Alterna el estado de pausa persistente (clic en el viewport)
+      // Diferente al hover — este estado sobrevive al salir del área
       function togglePause() {
         isPaused = !isPaused;
         if (isPaused) {
@@ -180,11 +248,15 @@ const {
         }
       }
 
+      // Flechas — stopPropagation evita que el clic llegue al viewport y active togglePause
       arrowLeft?.addEventListener('click', (e) => { e.stopPropagation(); goToIndex(currentIndex - 1); });
       arrowRight?.addEventListener('click', (e) => { e.stopPropagation(); goToIndex(currentIndex + 1); });
+
+      // Hover — pausa/reanuda sin cambiar el estado isPaused
       viewport?.addEventListener('mouseenter', () => { if (!isPaused) stopAutoplay(); });
       viewport?.addEventListener('mouseleave', () => { if (!isPaused) startAutoplay(); });
 
+      // Indicadores de progreso
       indicatorsButtons.forEach((btn) => {
         btn.addEventListener('click', (e) => {
           e.stopPropagation();
@@ -193,16 +265,19 @@ const {
         });
       });
 
+      // Ring de foco accesible (solo vía Tab)
       viewport?.addEventListener('focus', () => {
         if (isTabNavigation) {
           viewport.setAttribute('data-keyboard-focus', 'true');
         }
       });
-
       viewport?.addEventListener('blur', () => {
         viewport.setAttribute('data-keyboard-focus', 'false');
       });
 
+      // Teclado ← →
+      // Condición: el foco está en el row, o el row está centrado en el viewport
+      // sin que otro elemento ajeno al row tenga el foco
       window.addEventListener('keydown', (e) => {
         if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
 
@@ -219,6 +294,8 @@ const {
         }
       });
 
+      // Scroll horizontal (trackpad o rueda lateral)
+      // passive:false necesario para poder llamar preventDefault y evitar scroll de página
       let wheelTimeout: ReturnType<typeof setTimeout> | null = null;
       viewport?.addEventListener('wheel', (e) => {
         if (Math.abs(e.deltaX) > 30) {
@@ -231,15 +308,17 @@ const {
         }
       }, { passive: false });
 
+      // Clic en viewport — alterna pausa persistente
       viewport?.addEventListener('click', () => { togglePause(); });
 
+      // Swipe táctil (móvil / tablet)
       let touchStartX = 0;
       let touchEndX = 0;
       viewport?.addEventListener('touchstart', (e) => { touchStartX = e.changedTouches[0].screenX; }, { passive: true });
       viewport?.addEventListener('touchend', (e) => { touchEndX = e.changedTouches[0].screenX; handleSwipe(); }, { passive: true });
 
       function handleSwipe() {
-        const threshold = 50;
+        const threshold = 50; // px mínimos para considerar un gesto intencional
         if (touchStartX - touchEndX > threshold) goToIndex(currentIndex + 1);
         if (touchEndX - touchStartX > threshold) goToIndex(currentIndex - 1);
       }
@@ -247,6 +326,10 @@ const {
       startAutoplay();
     });
   }
-  document.addEventListener('astro:page-load', initCarousels);
+
+  // Carga inicial: astro:page-load NO dispara en la primera carga sin <ClientRouter />.
+  // La llamada directa cubre ese caso; el listener cubre las navegaciones SPA.
+  // No hay doble-init porque sin ClientRouter el evento no se emite en carga inicial.
   initCarousels();
+  document.addEventListener('astro:page-load', initCarousels);
 </script>

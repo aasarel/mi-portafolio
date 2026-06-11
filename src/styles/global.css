@@ -163,6 +163,43 @@
   }
 }
 
+/* ============================================================
+   SCROLL REVEAL — Inspired by Van Schneider
+   Uso: añade clase .reveal a cualquier elemento.
+   El script en Layout.astro añade .is-visible cuando entra
+   al viewport, disparando la transición fade + slide-up.
+   Stagger: usa .reveal-d1 / .reveal-d2 / .reveal-d3 / .reveal-d4
+   para animar hijos en secuencia (añade junto con .reveal).
+   ============================================================ */
 
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity   0.72s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.72s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
 
+/* Delays escalonados para stagger de hijos */
+.reveal-d1 { transition-delay:  80ms; }
+.reveal-d2 { transition-delay: 160ms; }
+.reveal-d3 { transition-delay: 240ms; }
+.reveal-d4 { transition-delay: 320ms; }
+
+/* Variante más rápida para elementos pequeños / labels */
+.reveal-fast {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity   0.48s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.48s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-fast.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}

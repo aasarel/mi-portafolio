@@ -4,51 +4,9 @@
 // Dark mode via clase `.dark` en <html> (gestionado por Layout)
 
 import Layout from '../layouts/Layout.astro';
-import ProjectRow from '../components/ProjectRow.astro';
 import { Image } from 'astro:assets';
-
-// SVG inlinado como string raw para poder colorear via CSS `currentColor`.
-// No se usa <img> porque las etiquetas <img> no heredan CSS color — se necesita
-// el SVG embebido en el DOM para que fill: currentColor funcione.
 import owlLogoRaw from '../assets/logos/owl.svg?raw';
-
-// Foto de perfil: procesada por Astro <Image /> para generar variantes
-// WebP responsivas con srcset automático (280px y 560px para retina).
 import me from '../assets/logos/me.webp';
-
-// Imágenes del proyecto MOSES-SCADA: importadas como ImageMetadata para
-// que ProjectRow las procese con <Image /> y genere srcset WebP optimizado.
-import sliderDespues from '../assets/projects/moses/slider-despues.webp';
-import sliderDetalle from '../assets/projects/moses/slider-detalle.webp';
-
-// ─── Datos de proyectos ───────────────────────────────────────────────────────
-// Cada entrada alimenta un <ProjectRow>. `images` acepta ImageMetadata (import
-// local) o string (URL externa). Las URLs de placeholder serán reemplazadas con
-// screenshots reales cuando estén disponibles.
-const projects = [
-  {
-    title: "MOSES - SCADA: Rediseño visual y funcional del sistema de monitoreo del tren interurbano México Toluca",
-    platform: "SIMATIC WinCC 8.1",
-    description: "En sistemas críticos, la saturación visual es un riesgo de seguridad. Convertí un entorno obsoleto en un sistema modular y escalable que mitiga la carga cognitiva y elimina la fatiga por alarmas utilizando normativas internacionales y principios avanzados de UX.",
-    link: "/moses-scada",
-    images: [
-      sliderDespues,
-      sliderDetalle,
-    ],
-    activeIndex: 0
-  },
-  {
-    title: "MOSES - SCADA: Arquitectura lógica y sistema de diseño modular para la red de comunicaciones",
-    platform: "SIMATIC WinCC 8.1",
-    description: "En el control ferroviario, la claridad visual equivale a tiempo de reacción. Rediseñé el módulo de comunicaciones de MOSES-SCADA, implementando una arquitectura de cuatro niveles jerárquicos que agiliza el aislamiento de fallas y asegura la operación.",
-    link: "/repo-moses-scada",
-    images: [
-      "https://via.placeholder.com/1296x549?text=Comunicaciones+01",
-      "https://via.placeholder.com/1296x549?text=Comunicaciones+02"
-    ],
-    activeIndex: 0
-  }
-];
 ---
 
 <Layout title="Home | Asarel Portafolio">
@@ -62,18 +20,18 @@ const projects = [
          · Col 9–11 (span 3):  Fotografía de perfil circular
          · Col 1–12 (full):    CTA "Explora mi trabajo"
   ════════════════════════════════════════════════════════════════════════ -->
-  <section class="max-w-7xl mx-auto px-4 md:px-8 py-12 md:py-20 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+  <section class="max-w-7xl mx-auto px-4 md:px-8 pt-12 md:pt-10 pb-20 md:pb-32 grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
 
     <!-- ── Titular H1 ──────────────────────────────────────────────────── -->
     <!-- Offset de 1 columna en md+ para alinear con el margen del copy -->
-    <div class="col-span-12 md:col-start-2 md:col-span-11 text-left mb-12 md:mb-8">
+    <div class="col-span-12 md:col-start-2 md:col-span-11 text-left mb-12 md:mb-8 reveal">
       <h1 class="font-display text-5xl md:text-[70px] font-bold tracking-[-0.02em] text-text-primary leading-[1.1] md:leading-[76px]">
         Si la interfaz frustra,<br />el diseño falló.
       </h1>
     </div>
 
     <!-- ── Copy editorial + firma ──────────────────────────────────────── -->
-    <div class="col-span-12 md:col-start-2 md:col-span-6 flex flex-col justify-between h-full space-y-6">
+    <div class="col-span-12 md:col-start-2 md:col-span-6 flex flex-col justify-between h-full space-y-6 reveal reveal-d1">
       <p class="font-sans text-[16px] font-semibold leading-[26px] text-text-primary">
         Diseñar productos digitales no es acumular pantallas ni seguir tendencias. Me atraen los proyectos complejos porque mi trabajo es encontrar una solución ridículamente simple y clara. El diseño de producto es claridad; se trata de entender a fondo a las personas para diseñar flujos simplificados. Si el producto responde al sentido humano, el valor y el impacto en el negocio llegan solos.
       </p>
@@ -113,7 +71,7 @@ const projects = [
     <!-- <Image /> genera srcset WebP en 280px y 560px (retina).
          mix-blend-luminosity + grayscale integra la foto con el fondo
          del tema sin depender de un color de fondo específico. -->
-    <div class="col-span-12 md:col-span-3 flex justify-center md:justify-start">
+    <div id="hero-photo" class="col-span-12 md:col-span-3 flex justify-center md:justify-start reveal reveal-d2">
       <div class="relative w-full max-w-[280px] aspect-[5/5] overflow-hidden bg-bg-secondary rounded-[50%_50%_50%_50%] border border-text-primary/10 shadow-sm">
         <Image
           src={me}
@@ -126,59 +84,53 @@ const projects = [
     </div>
 
     <!-- ── CTA principal ───────────────────────────────────────────────── -->
-    <div class="col-span-12 flex justify-center pt-16 md:pt-24">
-      <a href="#portafolio" class="inline-block bg-text-primary text-bg-primary px-8 py-3.5 rounded-full font-sans font-semibold text-sm tracking-wide transition-all duration-200 hover:bg-text-accent hover:text-bg-primary active:scale-[0.98]">
+    <div class="col-span-12 flex justify-center pt-16 md:pt-24 reveal reveal-d3">
+      <a href="/proyectos" class="inline-block bg-text-primary text-bg-primary px-8 py-3.5 rounded-full font-sans font-semibold text-sm tracking-wide transition-all duration-200 hover:bg-text-accent hover:text-bg-primary active:scale-[0.98]">
         Explora mi trabajo
       </a>
     </div>
 
   </section>
 
-  <!-- ═══════════════════════════════════════════════════════════════════════
-       SECCIÓN PORTAFOLIO
-       Header editorial + listado de <ProjectRow> generados desde el array
-       `projects`. Cada ProjectRow contiene su propio carrusel con autoplay.
-  ════════════════════════════════════════════════════════════════════════ -->
-  <section id="portafolio" class="w-full pt-20 border-t border-text-primary/5">
-
-    <!-- Encabezado de sección -->
-    <div class="mx-auto max-w-[1552px] px-6 md:px-12 lg:px-[128px] grid grid-cols-1 md:grid-cols-12 gap-[32px] mb-0">
-      <div class="col-span-12 text-left">
-        <h2 class="font-display text-[24px] md:text-[36px] lg:text-[40px] uppercase tracking-[0.25em] text-text-accent font-bold mb-4">Portafolio</h2>
-        <p class="font-sans text-[14px] md:text-[15px] lg:text-[16px] font-normal leading-relaxed text-text-primary max-w-4xl">
-          <strong class="font-semibold">Aquí no hay diseños para rellenar el ojo.</strong> Es una mirada profunda a cómo tomo proyectos complejos y los convierto en productos digitales intuitivos, escalables y con propósito.
-        </p>
-      </div>
-    </div>
-
-    <!-- Lista de proyectos — renderiza un ProjectRow por cada entrada del array -->
-    <div class="w-full flex flex-col">
-      {projects.map((project) => (
-        <ProjectRow
-          id={project.link.replace("#", "")}
-          title={project.title}
-          description={project.description}
-          link={project.link}
-          platform={project.platform}
-          images={project.images}
-          activeIndex={project.activeIndex}
-        />
-      ))}
-    </div>
-
-  </section>
 
 </Layout>
 
 <style>
-  /*
-   * .owl-divider — SVG inlinado via set:html en el divisor del hero.
-   * :global(svg) evita que el scope de Astro bloquee el selector sobre
-   * el contenido inyectado (set:html no aplica data-astro-cid al HTML que inserta).
-   */
   .owl-divider :global(svg) {
     height: 32px;
     width: auto;
     display: block;
   }
+  /* Paralaje: la imagen se desplaza más lento que el scroll para crear profundidad */
+  #hero-photo {
+    will-change: transform;
+  }
 </style>
+
+<script>
+  // Paralaje sutil en la foto de perfil — solo en dispositivos con puntero fino (desktop)
+  // La imagen se desplaza al 14% de la velocidad del scroll (hacia abajo),
+  // lo que la hace "quedarse" ligeramente mientras el resto sube, creando profundidad.
+  function initParallax(): void {
+    const isCoarse = window.matchMedia('(pointer: coarse)').matches;
+    if (isCoarse) return;
+
+    const photo = document.getElementById('hero-photo');
+    if (!photo) return;
+
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const offset = window.scrollY * 0.14;
+          photo.style.transform = `translateY(${offset}px)`;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+  }
+
+  initParallax();
+  document.addEventListener('astro:after-swap', initParallax);
+</script>

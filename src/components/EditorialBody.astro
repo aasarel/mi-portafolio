@@ -20,10 +20,16 @@
     font-family: var(--font-sans, 'Inter', sans-serif);
     font-size: 16px;
     line-height: 26px;
-    /* Usamos color-mix para aplicar 75% de opacidad a tu variable Hex */
     color: color-mix(in srgb, var(--color-text-primary) 75%, transparent);
     margin-bottom: 4px;
+    text-align: left;
     text-wrap: pretty;
+  }
+  @media (min-width: 768px) {
+    .prose-asarel p {
+      text-align: justify;
+      hyphens: auto;
+    }
   }
 
   /* ====================================================================
@@ -87,27 +93,27 @@
      VIÑETAS MINIMALISTAS (LISTAS UNORDERED)
      ========================================================== */
   .prose-asarel ul {
-    list-style-type: none; /* Apaga viñetas nativas */
-    padding-left: 16px;
+    list-style-type: none;
+    padding-left: 20px;
     display: flex;
     flex-direction: column;
     gap: 10px;
     margin-bottom: 12px;
   }
-  
+
   .prose-asarel ul li {
     position: relative;
     font-family: var(--font-sans, 'Inter', sans-serif);
     font-size: 15px;
     line-height: 24px;
     color: color-mix(in srgb, var(--color-text-primary) 75%, transparent);
+    text-align: left;
   }
-  
-  /* Punto naranja para UL (incluso si está anidado dentro de un OL) */
+
   .prose-asarel ul li::before {
     content: '';
     position: absolute;
-    left: -16px;
+    left: -20px;
     top: 10px;
     width: 4px;
     height: 4px;
@@ -119,25 +125,24 @@
      LISTAS NUMERADAS INDEXADAS (ORDERED LISTS)
      ========================================================== */
   .prose-asarel ol {
-    list-style-type: none; /* EL CULPABLE: Apaga los números nativos del navegador */
+    list-style-type: none;
     counter-reset: asarel-counter;
-    padding-left: 24px;
+    padding-left: 28px;
     display: flex;
     flex-direction: column;
     gap: 12px;
     margin-bottom: 12px;
   }
-  
-  /* Usamos ">" para que SOLO afecte a los elementos de la lista principal, no a los anidados */
+
   .prose-asarel ol > li {
     position: relative;
     font-family: var(--font-sans, 'Inter', sans-serif);
     font-size: 15px;
     line-height: 24px;
     color: color-mix(in srgb, var(--color-text-primary) 75%, transparent);
+    text-align: left;
   }
-  
-  /* Tipografía Mono para los números (Solo primer nivel) */
+
   .prose-asarel ol > li::before {
     counter-increment: asarel-counter;
     content: "0" counter(asarel-counter) ".";
@@ -147,8 +152,6 @@
     font-family: var(--font-mono, monospace);
     font-size: 11px;
     color: var(--color-text-accent, #ff5500);
-    
-    /* Protecciones extra por si el navegador intenta heredar la forma del punto */
     background-color: transparent;
     width: auto;
     height: auto;

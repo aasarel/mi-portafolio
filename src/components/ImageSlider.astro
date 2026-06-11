@@ -1,64 +1,108 @@
 ---
-// ==========================================
-// COMPONENTE: ImageSlider.astro (Versión Blindada)
-// ==========================================
+// =========================================================================
+// ABRAHAM DESIGN SYSTEM — COMPONENTE: ImageSlider.astro
+// =========================================================================
+// Propósito: Comparador Before / After de dos capturas de pantalla.
+// El usuario arrastra un input[type=range] invisible sobre la imagen para
+// revelar el lado "Después" usando clip-path dinámico.
+//
+// Estructura de capas (z-index):
+//   z-0  — Imagen "Antes" (base, visible siempre)
+//   z-10 — Overlay "Después" (clip-path recorta la zona visible)
+//   z-20 — Línea divisora + botón ↔ (marcador visual de la posición)
+//   z-30 — Input range invisible (cubre todo; captura los eventos del usuario)
+//
+// Accesibilidad:
+//   · El input tiene aria-label descriptivo para lectores de pantalla
+//   · El ring de foco (outline) solo aparece cuando la navegación llega vía Tab;
+//     con mouse/touch el contenedor permanece sin borde para no interferir
+//     con la estética cinematográfica de la imagen
+//   · data-keyboard-focus en el contenedor es controlado por JS (isTabNav flag)
+//
+// Nota: las imágenes se pasan como URLs string (no ImageMetadata) porque
+// el slider usa capturas estáticas exportadas de WinCC / herramientas externas
+// que no pasan por el pipeline de optimización de Astro.
+// =========================================================================
 
 interface Props {
-  beforeImage: string;
-  afterImage: string;
-  beforeLabel?: string;
-  afterLabel?: string;
+  beforeImage: string;   // URL o ruta pública de la imagen "Antes"
+  afterImage: string;    // URL o ruta pública de la imagen "Después"
+  beforeLabel?: string;  // Etiqueta del lado izquierdo (default: "Antes")
+  afterLabel?: string;   // Etiqueta del lado derecho (default: "Después")
 }
 
-const { 
-  beforeImage, 
-  afterImage, 
-  beforeLabel = "Antes", 
-  afterLabel = "Después" 
+const {
+  beforeImage,
+  afterImage,
+  beforeLabel = "Antes",
+  afterLabel = "Después"
 } = Astro.props;
 ---
 
+<!-- ══════════════════════════════════════════════════════════════
+     SLIDER CONTAINER — aspect-ratio 1296:549 (proporción SCADA WinCC)
+     max-w-[1552px] alinea el componente con el carril de lectura
+     amplio de las páginas de caso de estudio
+══════════════════════════════════════════════════════════════ -->
 <section class="mx-auto max-w-[1552px] px-6 md:px-12 lg:px-[128px] mt-0 md:mt-8 mb-20">
-  
-  <div class="relative w-full aspect-[1296/549] bg-bg-primary rounded overflow-hidden border border-text-primary/10 select-none image-slider-master">
-    
-    <img 
-      src={beforeImage} 
-      alt="Captura de la interfaz original" 
+
+  <!-- Contenedor principal del slider
+       data-keyboard-focus: "false" por defecto; JS lo activa con "true"
+       solo cuando el foco llega vía Tab para mostrar el ring de accesibilidad -->
+  <div
+    class="relative w-full aspect-[1296/549] bg-bg-primary rounded overflow-hidden select-none image-slider-master"
+    data-keyboard-focus="false"
+  >
+
+    <!-- ── Capa "Antes" (z-0) — imagen base siempre visible ──────────── -->
+    <img
+      src={beforeImage}
+      alt="Captura de la interfaz original"
       class="absolute inset-0 w-full h-full object-contain contrast-110 pointer-events-none z-0"
     />
-    <div class="absolute bottom-4 left-4 bg-bg-primary/80 backdrop-blur px-3 py-1 rounded text-[10px] font-mono uppercase tracking-widest text-text-primary z-10 pointer-events-none">
+    <!-- Etiqueta "Antes" — anclada en la esquina inferior izquierda -->
+    <div class="absolute bottom-2 left-20 md:left-40 bg-bg-primary/80 backdrop-blur px-3 py-1 rounded text-[10px] font-mono uppercase tracking-widest text-text-primary z-10 pointer-events-none">
       {beforeLabel}
     </div>
 
-    <div 
+    <!-- ── Capa "Después" (z-10) — recortada con clip-path dinámico ──── -->
+    <!-- clip-path: inset(0 0 0 50%) es el valor inicial (50% desde la izq).
+         JS lo actualiza en tiempo real según el valor del input range. -->
+    <div
       class="absolute inset-0 w-full h-full pointer-events-none overflow-hidden slider-overlay z-10"
       style="clip-path: inset(0 0 0 50%);"
     >
-      <img 
-        src={afterImage} 
-        alt="Captura del rediseño visual optimizado" 
+      <img
+        src={afterImage}
+        alt="Captura del rediseño visual optimizado"
         class="absolute inset-0 w-full h-full object-contain pointer-events-none"
       />
-      <div class="absolute bottom-4 right-4 bg-text-primary text-bg-primary px-3 py-1 rounded text-[10px] font-mono uppercase tracking-widest z-10 pointer-events-none">
+      <!-- Etiqueta "Después" — anclada en la esquina inferior derecha -->
+      <div class="absolute bottom-2 right-20 md:right-40 bg-text-primary text-bg-primary px-3 py-1 rounded text-[10px] font-mono uppercase tracking-widest z-10 pointer-events-none">
         {afterLabel}
       </div>
     </div>
 
-    <div 
+    <!-- ── Línea divisora + botón ↔ (z-20) ──────────────────────────── -->
+    <!-- pointer-events-none: el input invisible de z-30 captura todos los eventos -->
+    <div
       class="absolute top-0 bottom-0 w-[1px] bg-text-primary z-20 pointer-events-none slider-divider"
       style="left: 50%;"
     >
-      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-bg-primary border border-text-primary/20 shadow-2xl flex items-center justify-center text-text-primary text-xs font-mono backdrop-blur-sm transition-transform duration-300 slider-btn">
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-bg-primary border border-text-primary/20 shadow-2xl flex items-center justify-center text-text-primary text-xs font-mono backdrop-blur-sm slider-btn">
         ↔
       </div>
     </div>
 
-    <input 
-      type="range" 
-      min="0" 
-      max="100" 
-      value="50" 
+    <!-- ── Input range invisible (z-30) — captura todos los gestos ───── -->
+    <!-- opacity-0 lo oculta visualmente; cursor-ew-resize da feedback correcto.
+         focus:outline-none porque el ring se gestiona en el contenedor padre
+         via data-keyboard-focus para mayor control visual. -->
+    <input
+      type="range"
+      min="0"
+      max="100"
+      value="50"
       class="absolute inset-0 w-full h-full opacity-0 cursor-ew-resize z-30 slider-input focus:outline-none"
       aria-label="Deslizador para comparar el diseño antes y después"
     />
@@ -67,16 +111,32 @@ const {
 </section>
 
 <style>
-  /* Escala sutil del botón central al hacer hover sobre el área del slider */
-  .image-slider-master:hover .slider-btn {
-    transform: translateX(-50%) translateY(-50%) scale(1.08);
+  /* Ring de foco visible SOLO cuando el usuario navega con Tab.
+     El selector [data-keyboard-focus="true"] es activado por JS
+     al detectar que el último evento de navegación fue una tecla Tab. */
+  .image-slider-master[data-keyboard-focus="true"] {
+    outline: 2px solid color-mix(in srgb, var(--color-text-primary) 40%, transparent);
+    outline-offset: 4px;
   }
 </style>
 
 <script>
+  // ── Detección de navegación por teclado ─────────────────────────────────
+  // isTabNav se activa con Tab y se limpia con cualquier mousedown.
+  // Permite mostrar el ring de foco solo en flujos de teclado (accesibilidad)
+  // sin afectar la estética cuando el usuario usa mouse o touch.
+  let isTabNav = false;
+
+  window.addEventListener('keydown', (e) => { if (e.key === 'Tab') isTabNav = true; }, { passive: true });
+  window.addEventListener('mousedown', () => { isTabNav = false; }, { passive: true });
+
+  // ── Inicialización de sliders ────────────────────────────────────────────
+  // Soporta múltiples instancias del componente en la misma página.
+  // updateSlider sincroniza clip-path del overlay y posición left de la línea
+  // con el valor del input en tiempo real (evento 'input').
   function initSliders() {
     const containers = document.querySelectorAll('.image-slider-master');
-    
+
     containers.forEach((container) => {
       const input = container.querySelector('.slider-input') as HTMLInputElement;
       const overlay = container.querySelector('.slider-overlay') as HTMLElement;
@@ -91,10 +151,22 @@ const {
       };
 
       input.addEventListener('input', updateSlider);
+
+      // Ring de foco: activa data-keyboard-focus en el contenedor padre, no en el input,
+      // para que el CSS pueda dibujar el outline alrededor de toda la imagen
+      input.addEventListener('focus', () => {
+        if (isTabNav) (container as HTMLElement).dataset.keyboardFocus = 'true';
+      });
+      input.addEventListener('blur', () => {
+        (container as HTMLElement).dataset.keyboardFocus = 'false';
+      });
+
+      // Sincroniza la posición inicial con el value del HTML (50%)
       updateSlider();
     });
   }
 
+  // astro:page-load garantiza reinicio correcto tras View Transitions
   document.addEventListener('astro:page-load', initSliders);
   initSliders();
 </script>

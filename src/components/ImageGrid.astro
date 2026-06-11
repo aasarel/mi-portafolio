@@ -2,6 +2,16 @@
 // =========================================================================
 // ABRAHAM DESIGN SYSTEM — COMPONENTE MAESTRO: ImageGrid.astro
 // =========================================================================
+// Propósito: Galería responsive de capturas de un caso de estudio.
+// Al hacer clic en una imagen se abre un modal <dialog> con la imagen
+// a máxima resolución. Cierre: botón ×, clic en backdrop, ESC, swipe móvil.
+//
+// REGLA DE LAYOUT — según el número de imágenes:
+//   2 imágenes → Grid simétrico 2 cols · centrado en pantalla (w-screen)
+//   4 imágenes → Grid simétrico 2×2 · max-w-[1200px] centrado (12 cols Figma)
+//   6 imágenes → Grid cinematográfico 2×3 · ANCHO COMPLETO de página (w-screen)
+//   8 imágenes → Grid cinematográfico 2×4 · ANCHO COMPLETO de página (w-screen)
+// =========================================================================
 
 import { Image, getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
@@ -18,87 +28,227 @@ interface Props {
 const { images } = Astro.props;
 const total = images.length;
 
-const isCinematic = total === 6 || total === 8;
-
-// Pre-genera URLs full-res para el href de PhotoSwipe.
-// getImage() procesa la imagen sin renderizar un <img> — nos da la URL
-// y las dimensiones reales para que PhotoSwipe abra la versión original.
+// URLs full-res WebP para el modal — calidad máxima sin reescalado
 const fullResImages = await Promise.all(
-  images.map(img => getImage({ src: img.src, format: 'webp' }))
+  images.map(img => getImage({ src: img.src, format: 'webp', width: img.src.width }))
 );
 
+// ── Layout según total de imágenes ─────────────────────────────────────
 let wrapperClasses = "mx-auto max-w-[1920px] px-6 md:px-12 lg:px-[128px] my-16";
 let gridClasses = "";
 let sizes = "(max-width: 640px) calc(100vw - 48px), calc(50vw - 96px)";
 
+const itemHeightClass = total === 2 ? 'md:h-[308px]' : '';
+const imgFitClass     = total === 2 ? 'h-full object-cover' : 'h-auto';
+const gridWrapperClass = total === 2 ? 'w-fit mx-auto' : 'w-full';
+
 if (total === 2) {
-  gridClasses = "grid-cols-1 md:grid-cols-2 gap-6 md:gap-8";
-  sizes = "(max-width: 768px) calc(100vw - 48px), calc(50vw - 96px)";
+  wrapperClasses = "w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] my-16 px-6 md:px-12";
+  gridClasses    = "grid-cols-1 md:grid-cols-[540px_540px] gap-6 md:gap-8";
+  sizes          = "(max-width: 768px) calc(100vw - 48px), 540px";
 } else if (total === 4) {
-  gridClasses = "grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8 max-w-[1200px] mx-auto";
-  sizes = "(max-width: 640px) calc(100vw - 48px), calc(50vw - 64px)";
+  wrapperClasses = "mx-auto max-w-[1200px] px-6 md:px-12 lg:px-[128px] my-16";
+  gridClasses    = "grid-cols-1 sm:grid-cols-2 gap-6 md:gap-8";
+  sizes          = "(max-width: 640px) calc(100vw - 48px), calc(50vw - 64px)";
 } else if (total === 6) {
-  wrapperClasses = "w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] px-6 md:px-12 lg:px-[128px] my-24";
-  gridClasses = "grid-cols-2 md:grid-cols-3 gap-4 md:gap-6";
-  sizes = "(max-width: 640px) calc(50vw - 32px), (max-width: 1024px) calc(33vw - 32px), calc(33vw - 64px)";
+  wrapperClasses = "w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] my-24";
+  gridClasses    = "grid-cols-2 md:grid-cols-3 gap-4 md:gap-6";
+  sizes          = "(max-width: 640px) calc(50vw - 32px), (max-width: 1024px) calc(33vw - 32px), calc(33vw - 64px)";
 } else if (total === 8) {
-  wrapperClasses = "w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] px-6 md:px-12 lg:px-[128px] my-24";
-  gridClasses = "grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6";
-  sizes = "(max-width: 640px) calc(50vw - 32px), (max-width: 1280px) calc(25vw - 32px), calc(25vw - 64px)";
+  wrapperClasses = "w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] my-24";
+  gridClasses    = "grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6";
+  sizes          = "(max-width: 640px) calc(50vw - 32px), (max-width: 1280px) calc(25vw - 32px), calc(25vw - 64px)";
 }
 ---
 
+<!-- Grid de imágenes -->
 <div class={wrapperClasses}>
-
-  <div class={`grid ${gridClasses} w-full`} id="project-gallery">
+  <div class={`grid ${gridClasses} ${gridWrapperClass}`}>
     {images.map((img, i) => (
-
       <a
         href={fullResImages[i].src}
-        data-pswp-width={fullResImages[i].attributes.width}
-        data-pswp-height={fullResImages[i].attributes.height}
-        target="_blank"
-        class="relative w-full aspect-video rounded-xl overflow-hidden bg-bg-secondary border border-text-primary/5 shadow-md group/grid-card block cursor-zoom-in pswp-gallery-item"
+        class={`lb-trigger relative w-full rounded-xl overflow-hidden bg-bg-secondary border border-text-primary/5 shadow-md group/grid-card block cursor-zoom-in ${itemHeightClass}`}
       >
         <Image
           src={img.src}
           alt={img.alt}
           widths={[400, 800, 1200, 1920]}
           sizes={sizes}
-          class="w-full h-full object-contain transition-transform duration-700 ease-out-silk group-hover/grid-card:scale-105"
+          class={`w-full ${imgFitClass} block transition-transform duration-700 ease-out-silk group-hover/grid-card:scale-105`}
           loading="lazy"
           decoding="async"
         />
-        <div class="absolute inset-0 bg-black/[0.03] dark:bg-black/[0.15] pointer-events-none transition-colors duration-300 group-hover/grid-card:bg-transparent"></div>
+        <div class="absolute inset-0 bg-black/3 dark:bg-black/15 pointer-events-none transition-colors duration-300 group-hover/grid-card:bg-transparent"></div>
       </a>
-
     ))}
   </div>
-
 </div>
+
+<!-- ── Modal lightbox ───────────────────────────────────────────────────
+     <dialog> nativo: ESC cierra automáticamente, foco atrapado, accesible.
+     El backdrop se define en <style> con :global() para escapar el scope.
+──────────────────────────────────────────────────────────────────────── -->
+<dialog class="lb-modal p-0 border-none outline-none bg-transparent">
+
+  <!-- Sin fondo — la imagen flota directamente sobre el backdrop -->
+  <div class="relative inline-flex">
+
+    <!-- Imagen a máxima resolución -->
+    <img
+      class="lb-img block rounded-xl shadow-[0_32px_80px_rgba(0,0,0,0.6)] max-w-[90vw] max-h-[88vh] w-auto h-auto"
+      alt=""
+    />
+
+    <!-- Botón cerrar — esquina superior derecha sobre la imagen -->
+    <button
+      class="lb-close absolute top-3 right-3 z-10 w-9 h-9 flex items-center justify-center rounded-full bg-black/50 backdrop-blur-sm text-white hover:bg-black/70 transition-all duration-200"
+      aria-label="Cerrar"
+    >
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+
+    <!-- Contador — inferior centrado sobre la imagen -->
+    <span class="lb-counter absolute bottom-3 left-1/2 -translate-x-1/2 z-10 px-3 py-1 rounded-full bg-black/40 backdrop-blur-sm font-mono text-[11px] tracking-widest text-white/80 select-none whitespace-nowrap"></span>
+
+    <!-- Flecha anterior -->
+    <button
+      class="lb-prev absolute left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 hidden items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-white hover:bg-black/65 transition-all duration-200"
+      aria-label="Anterior"
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </button>
+
+    <!-- Flecha siguiente -->
+    <button
+      class="lb-next absolute right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 hidden items-center justify-center rounded-full bg-black/40 backdrop-blur-sm text-white hover:bg-black/65 transition-all duration-200"
+      aria-label="Siguiente"
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"/>
+      </svg>
+    </button>
+
+  </div>
+</dialog>
 
 <style>
   .ease-out-silk {
     transition-timing-function: cubic-bezier(0.3, 0, 0.15, 1.12);
   }
+
+  /* Cerrado: oculto por defecto */
+  :global(.lb-modal) {
+    display: none;
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  /* Abierto: full-viewport con flexbox para centrar la imagen */
+  :global(.lb-modal[open]) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    max-width: 100vw;
+    max-height: 100vh;
+  }
+
+  /* Backdrop oscuro con blur — :global() necesario porque ::backdrop no recibe el scope de Astro */
+  :global(.lb-modal::backdrop) {
+    background: rgba(0, 0, 0, 0.72);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  /* Animación de entrada del modal */
+  :global(.lb-modal[open]) {
+    animation: lb-in 0.22s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  @keyframes lb-in {
+    from { opacity: 0; transform: scale(0.96) translateY(6px); }
+    to   { opacity: 1; transform: scale(1)    translateY(0);   }
+  }
 </style>
 
 <script>
-  import PhotoSwipeLightbox from 'photoswipe/lightbox';
-  import 'photoswipe/style.css';
+  let _ctrl: AbortController | null = null;
 
-  const initLightbox = () => {
-    const lightbox = new PhotoSwipeLightbox({
-      gallery: '#project-gallery',
-      children: 'a',
-      pswpModule: () => import('photoswipe'),
-      bgOpacity: 0.9,
-      errorMsg: 'La imagen no pudo ser cargada',
+  const init = () => {
+    _ctrl?.abort();
+    _ctrl = new AbortController();
+    const { signal } = _ctrl;
+
+    const modal   = document.querySelector<HTMLDialogElement>('.lb-modal');
+    if (!modal) return;
+
+    const img     = modal.querySelector<HTMLImageElement>('.lb-img')!;
+    const counter = modal.querySelector<HTMLElement>('.lb-counter')!;
+    const closeBtn = modal.querySelector<HTMLButtonElement>('.lb-close')!;
+    const prevBtn  = modal.querySelector<HTMLButtonElement>('.lb-prev')!;
+    const nextBtn  = modal.querySelector<HTMLButtonElement>('.lb-next')!;
+
+    const triggers = Array.from(document.querySelectorAll<HTMLAnchorElement>('a.lb-trigger'));
+    if (!triggers.length) return;
+
+    const N = triggers.length;
+    let current = 0;
+
+    const open = (i: number) => {
+      current = Math.max(0, Math.min(i, N - 1));
+      const a = triggers[current];
+      img.src = a.href;
+      img.alt = a.querySelector('img')?.getAttribute('alt') ?? '';
+      counter.textContent = N > 1 ? `${current + 1} / ${N}` : '';
+      prevBtn.style.display = N > 1 && current > 0       ? 'flex' : 'none';
+      nextBtn.style.display = N > 1 && current < N - 1   ? 'flex' : 'none';
+      if (!modal.open) modal.showModal();
+    };
+
+    // Abrir al hacer clic en el thumbnail
+    triggers.forEach((a, i) => {
+      a.addEventListener('click', (e) => { e.preventDefault(); open(i); }, { signal });
     });
 
-    lightbox.init();
+    // Controles de navegación y cierre
+    closeBtn.addEventListener('click', () => modal.close(), { signal });
+    prevBtn.addEventListener('click',  () => open(current - 1), { signal });
+    nextBtn.addEventListener('click',  () => open(current + 1), { signal });
+
+    // Clic en el backdrop cierra el modal
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.close(); }, { signal });
+
+    // Teclado: flechas para navegar, ESC nativo
+    modal.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft')  { e.preventDefault(); open(current - 1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); open(current + 1); }
+    }, { signal });
+
+    // Swipe móvil: vertical cierra · horizontal navega
+    let tx = 0, ty = 0;
+    modal.addEventListener('touchstart', (e) => {
+      tx = e.touches[0].clientX;
+      ty = e.touches[0].clientY;
+    }, { signal, passive: true } as AddEventListenerOptions);
+
+    modal.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - tx;
+      const dy = e.changedTouches[0].clientY - ty;
+      if (Math.abs(dy) > Math.abs(dx) && Math.abs(dy) > 72) { modal.close(); return; }
+      if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 72) {
+        dx < 0 ? open(current + 1) : open(current - 1);
+      }
+    }, { signal });
   };
 
-  document.addEventListener('DOMContentLoaded', initLightbox);
-  document.addEventListener('astro:page-load', initLightbox);
+  document.addEventListener('astro:page-load', init);
+  init();
 </script>

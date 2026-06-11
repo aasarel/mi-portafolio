@@ -7,7 +7,7 @@ import owlLogo from '../assets/logos/owl.svg';
 
 const navLinks = [
   { label: "Inicio",        href: "/" },
-  { label: "Proyectos",     href: "/#portafolio" },
+  { label: "Proyectos",     href: "/proyectos" },
   { label: "Arte visual",   href: "/arte-visual" },
   { label: "Servicios",     href: "/servicios" },
   { label: "Sobre mí",      href: "/sobre-mi" },
@@ -61,7 +61,7 @@ const currentPath = Astro.url.pathname;
         transition-colors duration-200 group-hover:text-interaction-link-hover
       ">
         ABRAHAM ASAREL
-        <span class="block text-[10px] font-normal tracking-[0.2em] uppercase text-text-link mt-[2px] py-1">
+        <span class="block text-[10px] font-normal tracking-[0.2em] uppercase text-text-link mt-0.5 py-1">
           UX &amp; Product Designer
         </span>
       </span>
@@ -186,7 +186,7 @@ const currentPath = Astro.url.pathname;
         aria-controls="mobile-menu"
         class="
           w-9 h-9 rounded-sm
-          flex flex-col items-center justify-center gap-[5px]
+          flex flex-col items-center justify-center gap-1.25
           text-text-primary
           hover:bg-bg-secondary
           transition-colors duration-200

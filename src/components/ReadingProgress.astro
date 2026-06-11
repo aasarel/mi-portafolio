@@ -1,16 +1,40 @@
 ---
-// ==========================================
-// PROPIEDADES Y CONFIGURACIÓN DEL NAV MAESTRO
-// ==========================================
+// =========================================================================
+// ABRAHAM DESIGN SYSTEM — COMPONENTE: ReadingProgress.astro
+// =========================================================================
+// Propósito: Navegación de índice contextual para páginas de caso de estudio.
+// Muestra el progreso de lectura y permite saltar entre secciones del caso.
+//
+// Dos presentaciones según el breakpoint:
+//   · Desktop (lg+): Nav flotante en el borde derecho de la pantalla.
+//     Permanece invisible hasta el hover; al pasar el cursor aparece el panel
+//     translúcido con los labels de cada sección y su número de orden.
+//   · Mobile (< lg): Botón FAB en la esquina inferior derecha que abre un
+//     bottom sheet modal con el índice completo del caso.
+//
+// Detección de sección activa:
+//   · IntersectionObserver con rootMargin="-20% 0px -60% 0px" — una sección
+//     se activa cuando su porción central cruza la zona de lectura del viewport
+//   · Fallback de scroll: cuando scrollY < 80px se fuerza la sección "inicio"
+//     para que el primer ítem siempre esté activo al tope de la página
+//
+// Uso desde una página de caso de estudio:
+//   <ReadingProgress steps={[
+//     { id: "antecedentes", label: "Antecedentes" },
+//     { id: "auditoria",    label: "Auditoría Normativa" },
+//     ...
+//   ]} />
+//   Cada id debe coincidir exactamente con el id del contenedor HTML de esa sección.
+// =========================================================================
 
-// Estructura tipada para procesar las secciones de la narrativa
+// Estructura tipada para cada sección de la narrativa del caso
 interface Step {
-  id: string;    // El ID exacto del contenedor HTML (anclaje)
-  label: string; // Nombre editorial de la sección (ej: "Auditoría Normativa")
+  id: string;    // ID exacto del contenedor HTML que ancla la sección
+  label: string; // Nombre editorial visible en el índice (ej: "Auditoría Normativa")
 }
 
 interface Props {
-  steps: Step[]; // Colección completa de las 9 estaciones metodológicas
+  steps: Step[]; // Secuencia ordenada de secciones — determina el orden del índice
 }
 
 const { steps } = Astro.props;
@@ -86,16 +110,15 @@ const { steps } = Astro.props;
     const mobileLinks = document.querySelectorAll('.mobile-nav-link');
     
     // Mapeo selectivo de secciones físicas reales en el documento
-    const sections = Array.from(navLinks).map(link => {
-      const targetId = link.getAttribute('data-step-target');
-      return document.getElementById(targetId);
-    }).filter(section => section !== null);
+    const sections = Array.from(navLinks)
+      .map(link => document.getElementById(link.getAttribute('data-step-target') ?? ''))
+      .filter((section): section is HTMLElement => section !== null);
 
     // Gestor unificado para encender e iluminar el paso actual (PC + Móvil)
     const setGlobalActiveState = (activeId: string) => {
       // Sincronización para visualización en computadoras de escritorio
       navLinks.forEach(link => {
-        const targetId = link.getAttribute('data-step-target');
+        const targetId = link.getAttribute('data-step-target') ?? '';
         const num = link.querySelector('.step-num');
         const label = link.querySelector('.step-label');
         const dash = link.querySelector('.step-dash') as HTMLElement;
@@ -115,7 +138,7 @@ const { steps } = Astro.props;
 
       // CORRECCIÓN SHARP INDICATOR: Activación estricta sin radio ni píldoras de fondo
       mobileLinks.forEach(link => {
-        const targetId = link.getAttribute('data-step-target');
+        const targetId = link.getAttribute('data-step-target') ?? '';
         const txt = link.querySelector('.step-mobile-txt');
 
         if (targetId === activeId) {
