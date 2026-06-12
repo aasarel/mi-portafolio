@@ -1,6 +1,243 @@
 ---
-// sobre-mi.astro — Placeholder para la página Sobre mí.
-// Renderiza ConstruccionLayout hasta que el contenido real esté listo.
-import ConstruccionLayout from '../layouts/ConstruccionLayout.astro';
+// sobre-mi.astro — Página "Sobre mí & CV"
+// Estructura:
+//   · Título H1
+//   · Contenedor padre (grid 12 cols):
+//       Hijo 1 — Texto biográfico    (col 2–7)
+//       Hijo 2 — Divisor vertical    (col 8)
+//       Hijo 3 — Fotografía          (col 9–11)
+//   · Footer: CTA Currículum + CTA LinkedIn
+//   · Búho decorativo de fondo (absoluto, extremo derecho)
+
+import Layout from '../layouts/Layout.astro';
+import { Image } from 'astro:assets';
+import owlLogoRaw from '../assets/logos/owl.svg?raw';
+import me from '../assets/logos/me-complete.webp';
 ---
-<ConstruccionLayout section="Sobre mí" />
+
+<Layout title="Sobre mí | Asarel Portafolio">
+
+  <div class="relative overflow-x-hidden">
+
+    <!-- ── Búho decorativo de fondo ─────────────────────────────────────── -->
+    <!-- Mismo SVG que el divisor, escalado como marca de agua en el extremo
+         derecho. fill:currentColor hereda text-text-primary a muy baja
+         opacidad, adaptándose a light y dark mode sin filtros adicionales. -->
+    <div
+      class="owl-watermark absolute -right-65 top-[10%] pointer-events-none select-none
+             text-text-primary opacity-[0.04] dark:opacity-[0.06]"
+      aria-hidden="true"
+      set:html={owlLogoRaw}
+    />
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         GRID MAESTRO — 12 columnas
+         Título, contenido y footer comparten el mismo grid para
+         garantizar alineación perfecta entre filas.
+    ═══════════════════════════════════════════════════════════════════════ -->
+    <section
+      class="max-w-7xl mx-auto px-4 md:px-8
+             pt-12 md:pt-10 pb-24
+             grid grid-cols-1 md:grid-cols-12 gap-x-4 gap-y-10
+             items-start"
+    >
+
+      <!-- ── Título ──────────────────────────────────────────────────────── -->
+      <div class="col-span-12 md:col-start-2 md:col-span-11 reveal">
+        <h1
+          class="font-display text-5xl md:text-[70px] font-bold
+                 tracking-[-0.02em] text-text-primary
+                 leading-[1.1] md:leading-[120px]"
+        >
+          Sobre Mi
+        </h1>
+      </div>
+
+      <!-- ── Hijo 1: Texto biográfico ───────────────────────────────────── -->
+      <div
+        class="col-span-12 md:col-start-2 md:col-span-6
+               flex flex-col gap-5 reveal reveal-d1"
+      >
+
+        <p class="font-sans text-[16px] font-semibold leading-[26px] text-text-primary">
+          Diseño productos digitales, pero si te soy sincero, lo que realmente hago es observar
+          sistemas, ordenar el caos y descifrar la forma más simple y natural en que las personas
+          interactúen con la tecnología.
+        </p>
+
+        <p class="font-sans text-[16px] font-normal leading-[26px] text-text-primary/90">
+          De niño podía pasarme minutos enteros tratando de entender por qué algunas hormigas
+          caminaban como soldados mientras que otras se movían rápido y en direcciones que parecían
+          no tener sentido. En los días lluviosos, me paraba sobre el sillón —ese de estampado
+          floral verde con blanco, tan típico de los años 80´— a buscar patrones en los hilos de
+          agua que corrían por mi calle, una pendiente aún sin pavimentar. Intentaba cazar el
+          momento exacto en que dos nubes chocaran para entender cómo nacía un rayo y, si el
+          trueno era demasiado fuerte, buscaba refugio con mis padres.
+        </p>
+
+        <p class="font-sans text-[16px] font-normal leading-[26px] text-text-primary/90">
+          Cuando salía a jugar a ese terreno que tenía la obra inconclusa de una mega cisterna,
+          rodeada de árboles y tierra, me tomaba las cosas muy en serio. No me bastaba con
+          imaginar que era un ninja o un soldado; necesitaba que la experiencia fuera inmersiva.
+          Me armaba con capas, botas, pantalones militares, espadas o zapatos de ninja. Si iba a
+          crear un universo, tenía que cuidar cada accesorio para que se sintiera real.
+        </p>
+
+        <p class="font-sans text-[16px] font-normal leading-[26px] text-text-primary/90">
+          Cuatro décadas después, me doy cuenta que sigo haciendo lo mismo. Esa curiosidad infantil
+          se transformó en una obsesión total por el detalle. Te lo digo en serio, tengo un problema
+          con ellos; no sé ignorarlos.
+        </p>
+
+        <p class="font-sans text-[16px] font-normal leading-[26px] text-text-primary/90">
+          Mi convicción es que la empatía es el núcleo de cualquier proyecto colaborativo. Si un
+          sistema o producto hace sufrir a quien lo usa, el diseño falló.
+        </p>
+
+        <p class="font-sans text-[16px] font-normal leading-[26px] text-text-primary/90">
+          Esa búsqueda de estructura y balance no se queda solo en las pantallas; es el eje de mi
+          vida. Mi familia es la fuerza, la inspiración que me mantiene enfocado. Por eso, cuando
+          no estoy trabajando en algún proyecto, intento encontrar ese mismo equilibrio fuera de
+          la tecnología: tocando el bajo eléctrico, haciendo experimentos con el sintetizador,
+          masterizando el arte de un buen espresso o latte con esa pequeña máquina de café, y si
+          tengo la oportunidad busco la forma de estar en el frío de un bosque con aroma a pino,
+          fogata y tierra mojada.
+        </p>
+
+        <p class="font-sans text-[16px] font-normal leading-[26px] text-text-primary/90">
+          Si entras a mi espacio de trabajo, probablemente me encuentres puliendo flujos de
+          interacción, estructurando un análisis de investigación o imprimiendo alguna tarea del
+          colegio. Siempre con una taza de café al lado, mientras de fondo suenan ritmos lo-fi,
+          chill, música clásica o un soundtrack de Hans Zimmer. Diseñando con calma, pero
+          apuntando a la precisión.
+        </p>
+
+      </div>
+
+      <!-- ── Hijo 2: Divisor vertical + búho ───────────────────────────── -->
+      <!-- self-stretch hace que la celda ocupe la altura de la fila completa
+           (determinada por la columna de texto), permitiendo que h-full
+           en el divisor interno funcione correctamente. -->
+      <div
+        class="hidden md:flex md:col-span-1
+               flex-col items-center self-stretch"
+      >
+        <div class="w-[1px] bg-text-primary/20 flex-1 flex items-center justify-center">
+          <div class="bg-bg-primary py-3 z-10">
+            <div
+              aria-hidden="true"
+              class="owl-divider text-accent-forest"
+              set:html={owlLogoRaw}
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Hijo 3: Fotografía + caption ──────────────────────────────── -->
+      <div
+        class="col-span-12 md:col-span-4 self-center
+               flex flex-col items-center gap-4 reveal reveal-d2"
+      >
+        <div class="photo-container relative w-auto overflow-hidden">
+          <Image
+            src={me}
+            alt="Abraham Asarel Cruz Tejada"
+            widths={[300, 600]}
+            sizes="(min-width: 768px) 400px, 100vw"
+            class="w-auto h-65 md:h-175 grayscale contrast-[1.1] mix-blend-luminosity"
+          />
+        </div>
+
+        <!-- Caption bajo la foto — mono label, mismo estilo que etiquetas del proyecto -->
+        <p class="font-mono text-[12px] md:text-[16px] uppercase tracking-[0.2em] text-accent-aurora text-center">
+          Abraham Asarel Cruz
+        </p>
+      </div>
+
+      <!-- ── Footer: CTAs ───────────────────────────────────────────────── -->
+      <!-- col-start-2 mantiene la alineación con el texto y el título -->
+      <div
+        class="col-span-12 md:col-start-2 md:col-span-11
+               flex flex-wrap items-center gap-6 pt-4 reveal reveal-d3"
+      >
+
+        <!-- CTA principal: Currículum Vitae (página interna /cv) -->
+        <a
+          href="/cv"
+          class="inline-flex items-center gap-2
+                 bg-text-primary text-bg-primary
+                 px-8 py-3.5 rounded-full
+                 font-sans font-semibold text-sm tracking-wide
+                 transition-all duration-200
+                 hover:bg-text-accent hover:text-bg-primary
+                 active:scale-[0.98]"
+        >
+          <!-- Ícono de enlace externo -->
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="14" height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M15 3h6v6M10 14L21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+          </svg>
+          Ver Currículum Vitae
+        </a>
+
+        <!-- CTA secundario: LinkedIn — reemplaza la URL con tu perfil real -->
+        <a
+          href="https://www.linkedin.com/in/abrahamasarel"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2
+                 text-text-secondary hover:text-interaction-link-hover
+                 font-sans text-sm font-medium tracking-wide
+                 transition-colors duration-200"
+        >
+          <!-- Ícono LinkedIn -->
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16" height="16"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+          </svg>
+          LinkedIn
+        </a>
+
+      </div>
+
+    </section>
+
+  </div>
+
+</Layout>
+
+<style>
+  /* Búho en el divisor central — mismo tamaño que en index.astro */
+  .owl-divider :global(svg) {
+    height: 32px;
+    width: auto;
+    display: block;
+  }
+
+  /* Búho de fondo — escala grande para efecto marca de agua */
+  .owl-watermark :global(svg) {
+    width: 520px;
+    height: auto;
+    display: block;
+  }
+
+  /* Foto — sombra suave que desvanece el borde inferior */
+  .photo-container {
+    -webkit-mask-image: linear-gradient(to bottom, black 72%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 72%, transparent 100%);
+  }
+</style>

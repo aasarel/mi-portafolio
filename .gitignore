@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # carpetas de respaldo local
 repo/
+
+# Claude Code settings
+.claude/
