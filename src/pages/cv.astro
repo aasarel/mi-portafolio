@@ -1,0 +1,403 @@
+---
+// cv.astro — Página "Currículum Vitae"
+// Estructura:
+//   · Volver al portafolio
+//   · Encabezado: nombre, rol, datos de contacto
+//   · Resumen profesional (2 párrafos)
+//   · Experiencia profesional — timeline vertical (5 puestos)
+//   · Habilidades y Expertise / Dominio de herramientas (grid 2 cols)
+//   · Certificaciones / Cursos (grid 2 cols)
+//   · CTA: Descargar CV (PDF)
+//   · Búho decorativo de fondo, igual que sobre-mi.astro
+
+import Layout from '../layouts/Layout.astro';
+import owlLogoRaw from '../assets/logos/owl.svg?raw';
+
+interface Job {
+  role: string;
+  company: string;
+  period: string;
+  location: string;
+  intro?: string;
+  logros?: string[];
+  responsabilidades: string[];
+  tools: string[];
+}
+
+const experience: Job[] = [
+  {
+    role: "UX Product Designer",
+    company: "Grupo Sener México — División Mobility",
+    period: "Sep 2024 — Nov 2025",
+    location: "Polanco, Miguel Hidalgo, CDMX, México",
+    intro: "Lideré el rediseño del ecosistema MOSES SCADA para el Tren Interurbano México–Toluca.",
+    logros: [
+      "Reducción de los tiempos de desarrollo.",
+      "Estandarización y consistencia del sistema.",
+      "Metodología propia para los proyectos de la disciplina.",
+    ],
+    responsabilidades: [
+      "Definí la arquitectura UX, navegación y jerarquías visuales.",
+      "Diseñé 12 módulos operativos (10 implementados).",
+      "Desarrollé el Design System específico para entornos SCADA.",
+      "Alineé la interfaz y las mejores prácticas UX con estándares globales de seguridad.",
+      "Generé y actualicé la documentación del sistema.",
+    ],
+    tools: ["Notion", "Firma", "Adobe Illustrator", "SIMATIC WinCC"],
+  },
+  {
+    role: "UX Designer",
+    company: "BSD Servicios",
+    period: "2021 — 2024",
+    location: "Bosque de las Lomas, Miguel Hidalgo, CDMX, México",
+    intro: "Compartí responsabilidad por el diseño UX/UI y la gestión end-to-end de 3 nuevos proyectos.",
+    logros: [
+      "Optimización de procesos internos y mejora de la eficiencia operativa.",
+      "Mayor adopción y satisfacción entre usuarios internos y externos.",
+      "Bases para el Design System de la empresa.",
+    ],
+    responsabilidades: [
+      "Lideré sesiones de entendimiento con clientes internos y externos.",
+      "Definí reglas de negocio con Dirección según las necesidades de cada cliente.",
+      "Facilité sesiones de lluvia de ideas para proponer soluciones por proyecto.",
+      "Diseñé prototipos interactivos para cada proyecto.",
+      "Conduje pruebas de prototipos con clientes para recabar hallazgos e iterar.",
+      "Generé documentación y requerimientos para el equipo de desarrollo de 2 proyectos.",
+    ],
+    tools: ["Figma", "Bizagi", "Claris FileMaker", "Office 365"],
+  },
+  {
+    role: "Líder de proyectos Jr",
+    company: "BSD Servicios",
+    period: "Ene 2016 — Ene 2021",
+    location: "Bosque de las Lomas, Miguel Hidalgo, CDMX, México",
+    intro: "La empresa entró en un periodo de crecimiento exponencial: los departamentos operativos, financieros, contables y de ventas crecieron al mismo tiempo en que se crearon las áreas de diseño y desarrollo. Tomé el reto de consolidar un departamento de TI que integrara desarrollo, infraestructura de redes y gestión de proyectos.",
+    logros: [
+      "Consolidé el departamento de TI.",
+      "Lideré la planeación, priorización e implementación de mejoras tecnológicas y automatización de procesos.",
+      "Lideré el desarrollo y mantenimiento de los sitios web corporativos.",
+      "Participé como líder de proyecto en la arquitectura de base de datos e interfaz del ERP.",
+    ],
+    responsabilidades: [
+      "Definí alcance, objetivos y cronogramas de cada mejora tecnológica y desarrollo.",
+      "Coordiné al equipo de trabajo.",
+      "Llevé seguimiento continuo con el equipo y otros departamentos.",
+      "Mantuve informados a clientes y partes interesadas sobre avances, obstáculos y soluciones cada semana.",
+      "Participé en la definición de criterios de usabilidad, funcionalidad, estructura lógica e interfaz de usuario.",
+    ],
+    tools: ["Claris FileMaker", "Office 365", "Bizagi"],
+  },
+  {
+    role: "Claris FileMaker Developer",
+    company: "BSD Servicios",
+    period: "Ene 2010 — Ene 2016",
+    location: "Bosque de las Lomas, Miguel Hidalgo, CDMX, México",
+    logros: [
+      "Consolidé un ERP funcional a medida de las reglas de negocio.",
+      "Trabajé con distintas áreas para construir un ERP modular y colaborativo.",
+    ],
+    responsabilidades: [
+      "Desarrollo y mantenimiento de módulos del ERP.",
+      "Automatización de formularios y procesos operativos.",
+      "Generación de reportes y estadísticas.",
+      "Testing funcional y soporte a usuarios.",
+    ],
+    tools: ["Claris FileMaker", "Office", "Power BI"],
+  },
+  {
+    role: "Capturista de datos",
+    company: "BSD Servicios",
+    period: "Oct 2009 — 2010",
+    location: "Tecamachalco, Huixquilucan, Estado de México, México",
+    responsabilidades: [
+      "Gestión, organización y captura de datos.",
+      "Generación de reportes administrativos.",
+    ],
+    tools: ["Claris FileMaker", "Office"],
+  },
+];
+
+const habilidades: string[] = [
+  "UX Strategy",
+  "Arquitectura de información",
+  "Diseño de sistemas complejos",
+  "Automatización de procesos",
+  "Documentación técnica",
+  "Gestión de proyectos",
+  "Design System",
+  "SCRUM",
+];
+
+const herramientas: string[] = [
+  "Firma",
+  "Adobe Illustrator",
+  "Adobe Photoshop",
+  "Adobe XD",
+  "Claris FileMaker",
+  "Notion",
+  "Motores de IA aplicada a UX",
+  "Office 365",
+  "HTML / CSS3 / JS",
+  "Astro",
+  "Tailwind",
+  "GitHub",
+];
+
+const certificaciones: string[] = [
+  "Certificado profesional UX — Google",
+  "Fundamentos de prompting para IA — Google",
+  "The FileMaker 11 Training I, II, III",
+];
+
+const cursos: string[] = [
+  "Figma 2024 + Diseño Responsivo — 2024",
+  "Desarrollo web (HTML5, CSS3, JS) — 2021",
+  "DevOps con un café — 2021",
+  "Introduction to Amazon Elastic Compute Cloud — 2020",
+  "Explotación de datos en Power BI — 2018",
+  "Diplomado de liderazgo empresarial",
+];
+---
+
+<Layout title="Currículum Vitae | Asarel Portafolio">
+
+  <div class="relative overflow-x-hidden">
+
+    <!-- ── Búho decorativo de fondo — mismo tratamiento que sobre-mi.astro ── -->
+    <div
+      class="owl-watermark absolute -right-65 top-[6%] pointer-events-none select-none
+             text-text-primary opacity-[0.04] dark:opacity-[0.06]"
+      aria-hidden="true"
+      set:html={owlLogoRaw}
+    />
+
+    <section class="max-w-7xl mx-auto px-4 md:px-8 pt-12 md:pt-10 pb-24 relative">
+
+      <!-- ── Volver al portafolio ─────────────────────────────────────── -->
+      <div class="reveal mb-10 md:mb-12">
+        <a
+          href="/"
+          class="inline-flex items-center font-mono text-xs uppercase tracking-[0.2em] text-text-primary/60 hover:text-text-accent transition-colors duration-300 group focus:outline-none focus-visible:ring-2 focus-visible:ring-text-accent/40 rounded p-1"
+        >
+          <span class="transform translate-x-0 group-hover:-translate-x-1.5 transition-transform duration-300 mr-2">←</span>
+          Volver al portafolio
+        </a>
+      </div>
+
+      <!-- ── Encabezado: nombre, rol, contacto ───────────────────────────── -->
+      <div class="reveal reveal-d1 mb-14 md:mb-16">
+        <h1 class="font-display text-4xl md:text-[56px] font-bold tracking-[-0.02em] text-text-primary leading-[1.1]">
+          Abraham Asarel Cruz Tejada
+        </h1>
+        <p class="font-mono text-sm md:text-base uppercase tracking-[0.2em] text-text-accent mt-3">
+          UX Product Designer
+        </p>
+
+        <div class="flex flex-wrap gap-x-6 gap-y-3 mt-7 font-sans text-sm text-text-secondary">
+          <span class="inline-flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="3"/>
+            </svg>
+            Ciudad de México, México
+          </span>
+
+          <a href="mailto:abraham_asarel@icloud.com" class="inline-flex items-center gap-2 hover:text-interaction-link-hover transition-colors duration-200">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M4 4h16v16H4V4Z"/><path d="m4 7 8 6 8-6"/>
+            </svg>
+            abraham_asarel@icloud.com
+          </a>
+
+          <a href="https://www.linkedin.com/in/abraham-asarel/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 hover:text-interaction-link-hover transition-colors duration-200">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+            </svg>
+            linkedin.com/in/abraham-asarel
+          </a>
+
+          <a href="https://aasarel.art" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 hover:text-interaction-link-hover transition-colors duration-200">
+            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 4 10 15 15 0 0 1-4 10 15 15 0 0 1-4-10 15 15 0 0 1 4-10Z"/>
+            </svg>
+            aasarel.art
+          </a>
+        </div>
+      </div>
+
+      <!-- ── Resumen profesional ──────────────────────────────────────── -->
+      <div class="reveal reveal-d2 max-w-[760px] flex flex-col gap-4 mb-16 md:mb-20">
+        <p class="font-sans text-[16px] font-semibold leading-[26px] text-text-primary">
+          UX / Product Designer con 16 años de experiencia evolucionando desde desarrollo de software hasta liderazgo
+          UX en sistemas empresariales e infraestructura crítica. Especializado en arquitectura de la información,
+          modernización de sistemas complejos (ERP y SCADA) y documentación estructurada para equipos técnicos.
+        </p>
+        <p class="font-sans text-[16px] leading-[26px] text-text-primary/90">
+          Diseño soluciones que conectan reglas de negocio, tecnología y experiencia de usuario, priorizando
+          claridad operativa, consistencia sistémica y escalabilidad.
+        </p>
+      </div>
+
+      <!-- ── Experiencia profesional — timeline vertical ─────────────────── -->
+      <div class="mb-20 md:mb-24">
+        <h2 class="font-display text-2xl md:text-[28px] font-bold text-text-primary border-b border-text-accent/20 pb-3 mb-12 reveal">
+          Experiencia profesional
+        </h2>
+
+        <!-- Línea vertical del timeline; los puntos de cada puesto se alinean a left-[5px] -->
+        <div class="relative">
+          <div aria-hidden="true" class="absolute left-[5px] top-2 bottom-2 w-px bg-text-primary/15" />
+
+          <div class="flex flex-col gap-14 md:gap-16">
+            {experience.map((job) => (
+              <article class="relative pl-8 reveal">
+                <span aria-hidden="true" class="absolute left-0 top-1.5 w-[11px] h-[11px] rounded-full bg-accent-amber ring-4 ring-bg-primary" />
+
+                <h3 class="font-display text-xl md:text-2xl font-bold text-text-primary">{job.role}</h3>
+                <p class="font-sans text-sm text-text-primary/70 mt-1">{job.company}</p>
+
+                <div class="flex flex-wrap gap-x-3 gap-y-1 mt-2">
+                  <span class="font-mono text-[11px] uppercase tracking-[0.2em] text-text-accent">{job.period}</span>
+                  <span class="text-text-primary/25">·</span>
+                  <span class="font-sans text-[13px] text-text-secondary">{job.location}</span>
+                </div>
+
+                {job.intro && (
+                  <p class="font-sans text-[15px] leading-[24px] text-text-primary/90 mt-4 max-w-[680px]">
+                    {job.intro}
+                  </p>
+                )}
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6 mt-5">
+                  {job.logros && job.logros.length > 0 && (
+                    <div>
+                      <p class="font-mono text-[11px] uppercase tracking-[0.2em] text-text-accent mb-2">Logros</p>
+                      <ul class="cv-list">
+                        {job.logros.map((item) => <li class="font-sans text-[15px] leading-[24px] text-text-primary/85">{item}</li>)}
+                      </ul>
+                    </div>
+                  )}
+
+                  <div>
+                    <p class="font-mono text-[11px] uppercase tracking-[0.2em] text-text-accent mb-2">Responsabilidades</p>
+                    <ul class="cv-list">
+                      {job.responsabilidades.map((item) => <li class="font-sans text-[15px] leading-[24px] text-text-primary/85">{item}</li>)}
+                    </ul>
+                  </div>
+                </div>
+
+                <div class="flex flex-wrap gap-2 mt-6">
+                  {job.tools.map((tool) => (
+                    <span class="font-mono text-[10px] md:text-[11px] uppercase tracking-[0.15em] text-text-secondary border border-text-primary/15 rounded-full px-3 py-1">
+                      {tool}
+                    </span>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Habilidades y herramientas ───────────────────────────────── -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 mb-20 md:mb-24">
+        <div class="reveal">
+          <h2 class="font-display text-xl font-bold text-text-primary border-b border-text-accent/20 pb-3 mb-6">
+            Habilidades y Expertise
+          </h2>
+          <ul class="cv-list grid grid-cols-1 sm:grid-cols-2 gap-x-6">
+            {habilidades.map((item) => <li class="font-sans text-[15px] leading-[24px] text-text-primary/85">{item}</li>)}
+          </ul>
+        </div>
+
+        <div class="reveal reveal-d1">
+          <h2 class="font-display text-xl font-bold text-text-primary border-b border-text-accent/20 pb-3 mb-6">
+            Dominio de herramientas
+          </h2>
+          <div class="flex flex-wrap gap-2">
+            {herramientas.map((tool) => (
+              <span class="font-mono text-[10px] md:text-[11px] uppercase tracking-[0.15em] text-text-secondary border border-text-primary/15 rounded-full px-3 py-1.5">
+                {tool}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Certificaciones y cursos ─────────────────────────────────── -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 mb-20 md:mb-24">
+        <div class="reveal">
+          <h2 class="font-display text-xl font-bold text-text-primary border-b border-text-accent/20 pb-3 mb-6">
+            Certificaciones
+          </h2>
+          <ul class="cv-list">
+            {certificaciones.map((item) => <li class="font-sans text-[15px] leading-[24px] text-text-primary/85">{item}</li>)}
+          </ul>
+        </div>
+
+        <div class="reveal reveal-d1">
+          <h2 class="font-display text-xl font-bold text-text-primary border-b border-text-accent/20 pb-3 mb-6">
+            Cursos
+          </h2>
+          <ul class="cv-list">
+            {cursos.map((item) => <li class="font-sans text-[15px] leading-[24px] text-text-primary/85">{item}</li>)}
+          </ul>
+        </div>
+      </div>
+
+      <!-- ── CTA: Descargar CV ────────────────────────────────────────── -->
+      <!-- href apunta a /public/cv.pdf — pendiente: coloca ahí el PDF exportado
+           con este mismo contenido para que el botón funcione en producción. -->
+      <div class="flex justify-center md:justify-start reveal">
+        <a
+          href="/cv.pdf"
+          download
+          class="inline-flex items-center gap-2
+                 bg-text-primary text-bg-primary
+                 px-8 py-3.5 rounded-full
+                 font-sans font-semibold text-sm tracking-wide
+                 transition-all duration-200
+                 hover:bg-text-accent hover:text-bg-primary
+                 active:scale-[0.98]"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 3v12m0 0 5-5m-5 5-5-5M4 21h16"/>
+          </svg>
+          Descargar CV
+        </a>
+      </div>
+
+    </section>
+
+  </div>
+
+</Layout>
+
+<style>
+  /* Búho de fondo — escala grande para efecto marca de agua (igual a sobre-mi.astro) */
+  .owl-watermark :global(svg) {
+    width: 520px;
+    height: auto;
+    display: block;
+  }
+
+  /* Listas del CV — viñeta de acento, mismo tratamiento que EditorialBody */
+  .cv-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+  }
+  .cv-list li {
+    position: relative;
+    padding-left: 1rem;
+  }
+  .cv-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.65em;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--color-text-accent);
+  }
+</style>

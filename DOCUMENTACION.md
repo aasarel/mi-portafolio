@@ -1,6 +1,6 @@
 # Documentación Técnica — Portafolio Abraham Asarel
 
-> Versión: 2.0 · Fecha: 2026-06-09 · Stack: Astro 6 + Tailwind CSS 4 + TypeScript
+> Versión: 2.1 · Fecha: 2026-06-16 · Stack: Astro 6 + Tailwind CSS 4 + TypeScript
 
 ---
 
@@ -101,9 +101,10 @@ mi-portafolio/
     └── pages/
         ├── index.astro           # Página de inicio (hero + portafolio)
         ├── moses-scada.astro     # Caso de estudio: MOSES-SCADA
+        ├── sobre-mi.astro        # Biografía + fotografía + CTAs (Currículum, LinkedIn)
+        ├── cv.astro              # Currículum Vitae — experiencia, habilidades, certificaciones
         ├── arte-visual.astro     # Placeholder — Arte Visual
         ├── servicios.astro       # Placeholder — Servicios
-        ├── sobre-mi.astro        # Placeholder — Sobre mí
         ├── contacto.astro        # Placeholder — Contacto
         └── payrol.astro          # Placeholder — Proyecto PAYROL
 ```
@@ -183,11 +184,17 @@ Layout.astro ← base de todo
 │   └── (usado por): moses-scada.astro
 │
 ├── ConstruccionLayout.astro ← extiende Layout
-│   └── (usado por): arte-visual, servicios, sobre-mi, contacto, payrol
+│   └── (usado por): arte-visual, servicios, contacto, payrol
 │
-└── index.astro ← usa Layout directamente
-    └── ProjectRow.astro
-        └── (script): carrusel autoejecutable por instancia
+├── index.astro ← usa Layout directamente
+│   └── ProjectRow.astro
+│       └── (script): carrusel autoejecutable por instancia
+│
+├── sobre-mi.astro ← usa Layout directamente
+│   └── owl.svg (?raw) como divisor central + marca de agua de fondo
+│
+└── cv.astro ← usa Layout directamente
+    └── owl.svg (?raw) como marca de agua de fondo
 
 moses-scada.astro ← usa ProjectLayout
 ├── ReadingProgress.astro
@@ -475,9 +482,42 @@ El `id` de cada `<ProjectSection>` coincide exactamente con el `id` en el array 
 
 ---
 
-#### `src/pages/arte-visual.astro`, `servicios.astro`, `sobre-mi.astro`, `contacto.astro`, `payrol.astro`
+#### `src/pages/arte-visual.astro`, `servicios.astro`, `contacto.astro`, `payrol.astro`
 
 Páginas placeholder de una sola línea de markup. Usan `ConstruccionLayout` con su nombre de sección como prop. No contienen lógica ni componentes adicionales. Cuando se desarrollen, el archivo será reemplazado con contenido real.
+
+---
+
+#### `src/pages/sobre-mi.astro`
+
+**Propósito:** Página biográfica. Grid de 12 columnas: texto editorial (8 párrafos) en col 2–7, divisor con búho en col 8, fotografía en col 9–11. Footer con dos CTAs: "Ver Currículum Vitae" (`/cv`) y "LinkedIn" (externo).
+
+**Notas:**
+- Usa `Layout.astro` directamente — ya tiene contenido real, no `ConstruccionLayout`.
+- El búho de fondo (`.owl-watermark`) y el divisor central reutilizan el patrón `?raw` + `set:html` de `index.astro`.
+
+---
+
+#### `src/pages/cv.astro`
+
+**Propósito:** Currículum Vitae completo. Encabezado con datos de contacto, resumen profesional, timeline de 5 puestos (Grupo Sener México + BSD Servicios ×4), habilidades, dominio de herramientas, certificaciones, cursos y CTA de descarga.
+
+**Estructura:**
+
+| Sección | Contenido |
+|---|---|
+| Encabezado | Nombre, rol, ubicación, email, LinkedIn, sitio (`aasarel.art`) |
+| Resumen | 2 párrafos de posicionamiento profesional |
+| Experiencia profesional | Timeline vertical (línea + punto `accent-amber`); cada puesto trae período, ubicación, intro opcional, grid `Logros` / `Responsabilidades` y tags de herramientas |
+| Habilidades / Herramientas | Grid de 2 columnas |
+| Certificaciones / Cursos | Grid de 2 columnas |
+| CTA final | "Descargar CV" → `/cv.pdf` |
+
+**Pendiente:** el botón "Descargar CV" enlaza a `/cv.pdf`, que todavía no existe en `/public`. Falta colocar ahí el PDF exportado con este mismo contenido para que la descarga funcione en producción.
+
+**Timeline:** la línea vertical es un `<div>` absoluto (`left-[5px]`), no un pseudo-elemento — más simple de alinear con el punto de cada puesto. Cada punto usa `ring-4 ring-bg-primary` para "cortar" visualmente la línea donde pasa el marcador.
+
+**`.cv-list` (estilo local en `<style>`):** viñeta de 4px en `--color-text-accent`, mismo tratamiento que las listas de `EditorialBody.astro`. Se declara localmente (no se reutiliza `EditorialBody`) porque esta página no vive dentro del carril `.prose-asarel`.
 
 ---
 
@@ -927,4 +967,4 @@ En Tailwind v4 con variables CSS hexadecimales, no se puede usar `rgba(var(--col
 
 ---
 
-*Documentación generada el 2026-06-09. Actualizar cuando se añadan nuevas páginas, componentes o cambios en el sistema de diseño.*
+*Documentación generada el 2026-06-09, actualizada el 2026-06-16 (página `cv.astro` + corrección de `sobre-mi.astro`). Actualizar cuando se añadan nuevas páginas, componentes o cambios en el sistema de diseño.*
