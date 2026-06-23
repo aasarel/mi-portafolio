@@ -42,8 +42,8 @@ import me from '../assets/logos/me-complete.webp';
              items-start"
     >
 
-      <!-- ── Título ──────────────────────────────────────────────────────── -->
-      <div class="col-span-12 md:col-start-2 md:col-span-11 reveal">
+      <!-- ── Título + descarga CV ───────────────────────────────────────── -->
+      <div class="col-span-12 md:col-start-2 md:col-span-11 reveal flex items-end justify-between flex-wrap gap-4">
         <h1
           class="font-display text-5xl md:text-[70px] font-bold
                  tracking-[-0.02em] text-text-primary
@@ -51,6 +51,22 @@ import me from '../assets/logos/me-complete.webp';
         >
           Sobre Mi
         </h1>
+
+        <a
+          href="/cv.pdf"
+          download
+          style="display:none"
+          class="inline-flex items-center gap-1.5 mb-2 md:mb-5
+                 font-mono text-xs uppercase tracking-[0.2em]
+                 text-text-accent hover:text-text-primary
+                 transition-colors duration-300 group
+                 focus:outline-none focus-visible:ring-2 focus-visible:ring-text-accent/40 rounded p-1"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="transform group-hover:translate-y-0.5 transition-transform duration-300">
+            <path d="M12 3v12m0 0 5-5m-5 5-5-5M4 21h16"/>
+          </svg>
+          Descargar CV
+        </a>
       </div>
 
       <!-- ── Hijo 1: Texto biográfico ───────────────────────────────────── -->

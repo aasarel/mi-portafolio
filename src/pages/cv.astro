@@ -173,14 +173,25 @@ const cursos: string[] = [
 
     <section class="max-w-7xl mx-auto px-4 md:px-8 pt-12 md:pt-10 pb-24 relative">
 
-      <!-- ── Volver al portafolio ─────────────────────────────────────── -->
-      <div class="reveal mb-10 md:mb-12">
+      <!-- ── Barra superior: volver + descarga rápida de CV ───────────── -->
+      <div class="cv-no-print reveal mb-10 md:mb-12 flex items-center justify-between gap-4">
         <a
           href="/"
           class="inline-flex items-center font-mono text-xs uppercase tracking-[0.2em] text-text-primary/60 hover:text-text-accent transition-colors duration-300 group focus:outline-none focus-visible:ring-2 focus-visible:ring-text-accent/40 rounded p-1"
         >
           <span class="transform translate-x-0 group-hover:-translate-x-1.5 transition-transform duration-300 mr-2">←</span>
           Volver al portafolio
+        </a>
+
+        <a
+          href="/cv.pdf"
+          download
+          class="inline-flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.2em] text-text-accent hover:text-text-primary transition-colors duration-300 group focus:outline-none focus-visible:ring-2 focus-visible:ring-text-accent/40 rounded p-1"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" class="transform translate-y-0 group-hover:translate-y-0.5 transition-transform duration-300">
+            <path d="M12 3v12m0 0 5-5m-5 5-5-5M4 21h16"/>
+          </svg>
+          Descargar CV
         </a>
       </div>
 
@@ -345,9 +356,7 @@ const cursos: string[] = [
       </div>
 
       <!-- ── CTA: Descargar CV ────────────────────────────────────────── -->
-      <!-- href apunta a /public/cv.pdf — pendiente: coloca ahí el PDF exportado
-           con este mismo contenido para que el botón funcione en producción. -->
-      <div class="flex justify-center md:justify-start reveal">
+      <div class="cv-no-print flex justify-center md:justify-start reveal">
         <a
           href="/cv.pdf"
           download
@@ -399,5 +408,104 @@ const cursos: string[] = [
     height: 4px;
     border-radius: 50%;
     background: var(--color-text-accent);
+  }
+
+  /* ── @media print — PDF via Puppeteer (npm run gen:pdf) ──────────────
+     • Carta, márgenes estrechos 0.35in × 0.45in
+     • Tipografía comprimida (~9pt body) para objetivo de ≤ 2 páginas
+     • break-inside: avoid en cada <article> → ninguna entrada se corta
+     • También activo al imprimir manualmente desde el navegador          */
+  @media print {
+    @page {
+      size: letter;
+      margin: 0.35in 0.45in;
+    }
+
+    /* ── Ocultar cromo del sitio ── */
+    #site-header,
+    #site-header + div,
+    .cv-no-print,
+    .owl-watermark {
+      display: none !important;
+    }
+
+    /* ── Reveals: inmediatamente visibles ── */
+    .reveal {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
+    /* ── Contenedor principal sin padding web ── */
+    section.max-w-7xl {
+      padding-top: 0.08in !important;
+      padding-bottom: 0 !important;
+      max-width: 100% !important;
+    }
+
+    /* ── Tipografía comprimida ── */
+    h1 { font-size: 20pt !important; line-height: 1.1 !important; margin-bottom: 0.07in !important; }
+    h2 { font-size: 11pt !important;  line-height: 1.2 !important; margin-bottom: 0.05in !important; padding-bottom: 0.04in !important; }
+    h3 { font-size: 10pt !important;  line-height: 1.2 !important; margin-bottom: 0.03in !important; }
+    p, li, span, a { font-size: 9pt !important; line-height: 1.3 !important; }
+
+    /* ── Espaciado de secciones ── */
+    .mb-14, .mb-16 { margin-bottom: 0.1in !important; }
+    .mb-20, .mb-24 { margin-bottom: 0.14in !important; }
+    .mb-12 { margin-bottom: 0.09in !important; }
+    .mb-10 { margin-bottom: 0.08in !important; }
+    .mb-7, .mb-6 { margin-bottom: 0.05in !important; }
+    .mb-4, .mb-3 { margin-bottom: 0.03in !important; }
+    .mt-7 { margin-top: 0.06in !important; }
+    .mt-4, .mt-5, .mt-6 { margin-top: 0.04in !important; }
+    .mt-2, .mt-3 { margin-top: 0.02in !important; }
+    .mt-1 { margin-top: 0.01in !important; }
+
+    /* ── Gaps del timeline y grids ── */
+    .gap-14, .gap-16 { gap: 0.14in !important; }
+    .gap-12 { gap: 0.1in !important; }
+    .gap-x-10 { column-gap: 0.18in !important; }
+    .gap-6, .gap-5 { gap: 0.05in !important; }
+    .gap-4 { gap: 0.04in !important; }
+    .gap-2 { gap: 0.02in !important; }
+    .gap-y-6, .gap-y-3, .gap-y-1 { row-gap: 0.03in !important; }
+
+    /* ── Padding de artículo del timeline ── */
+    .pl-8 { padding-left: 0.22in !important; }
+    .pt-12, .pt-10 { padding-top: 0 !important; }
+    .pb-24 { padding-bottom: 0 !important; }
+    .py-3 { padding-top: 0.03in !important; padding-bottom: 0.03in !important; }
+    .px-4, .px-8 { padding-left: 0 !important; padding-right: 0 !important; }
+
+    /* ── Colores: negro sobre blanco ── */
+    * {
+      color: #111 !important;
+      background-color: transparent !important;
+      box-shadow: none !important;
+      border-color: #ddd !important;
+    }
+    body, html { background-color: #fff !important; }
+
+    /* ── Tags de herramientas ── */
+    span.border.rounded-full {
+      border-color: #bbb !important;
+      font-size: 7.5pt !important;
+      padding: 0.01in 0.05in !important;
+    }
+
+    /* ── REGLAS CRÍTICAS DE CORTE DE PÁGINA ─────────────────────────────
+       Ninguna entrada de experiencia ni sección se corta a mitad.
+       Si no cabe, Puppeteer la pasa completa a la siguiente página.      */
+    article {
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }
+    h2 {
+      page-break-after: avoid !important;
+      break-after: avoid !important;
+    }
+    .grid > div {
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
+    }
   }
 </style>
