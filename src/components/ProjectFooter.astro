@@ -1,11 +1,10 @@
 ---
 // ProjectFooter.astro — Pie de página para las páginas de caso de estudio.
 // Dos bloques:
-//   1. CTA central — invita al visitante a contactar; su texto y href son configurables
-//      para que cada caso pueda tener un llamado a la acción personalizado.
+//   1. CTA central — abre ContactCard flotante en lugar de redirigir a /contacto.
 //   2. Navegación entre proyectos — filas prevProject / nextProject opcionales.
-//      Si un lado no se pasa, ese lado renderiza un <div /> vacío para mantener
-//      el layout flex justify-between equilibrado.
+
+import ContactCard from './ContactCard.astro';
 
 interface NavItem {
   label: string;
@@ -15,19 +14,19 @@ interface NavItem {
 interface Props {
   heading?: string;
   ctaLabel?: string;
-  ctaHref?: string;
   prevProject?: NavItem;
   nextProject?: NavItem;
 }
 
 const {
   heading = "¿Tienes un proyecto similar?",
-  ctaLabel = "Hablemos de tu Proyecto",
-  ctaHref = "/contacto",
+  ctaLabel = "Hablemos de tu proyecto",
   prevProject,
   nextProject,
 } = Astro.props;
 ---
+
+<ContactCard />
 
 <footer class="w-full mt-24 border-t border-text-primary/10">
   <div class="mx-auto max-w-[1920px] px-6 md:px-12 lg:px-[128px]">
@@ -37,12 +36,12 @@ const {
       <h2 class="font-display font-semibold text-[22px] md:text-[26px] leading-tight tracking-tight text-text-primary text-center">
         {heading}
       </h2>
-      <a
-        href={ctaHref}
-        class="inline-flex items-center px-8 py-4 rounded-full bg-text-primary text-bg-primary font-sans font-medium text-[15px] tracking-tight hover:opacity-80 transition-opacity duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-text-accent/50"
+      <button
+        onclick="window.openContactCard()"
+        class="inline-flex items-center px-8 py-4 rounded-full bg-text-primary text-bg-primary font-sans font-medium text-[15px] tracking-tight hover:opacity-80 transition-opacity duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-text-accent/50 cursor-pointer"
       >
         {ctaLabel}
-      </a>
+      </button>
     </div>
 
     {/* Navegación entre proyectos */}
