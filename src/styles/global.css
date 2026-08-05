@@ -50,6 +50,14 @@
   --color-interaction-link-hover:  #B88A52;
   --color-interaction-focus-ring:  #5F7490;
   --color-interaction-selection:   #B88A52;
+
+  /* — Estados semánticos (ISA-101) — */
+  --color-status-critico:          #FF0000;
+  --color-status-atencion:         #FF9100;
+  --color-status-comunicacion:     #FFC000;
+  --color-status-normal:           #808080;
+  --color-status-metricas:         #0096FF;
+  --color-status-correcto:         #2E7D32;
 }
 
   /* ---------------------------------------------------------------
@@ -82,6 +90,14 @@
     --color-interaction-link-hover:  #C89A61;
     --color-interaction-focus-ring:  #7188A8;
     --color-interaction-selection:   #C89A61;
+
+    /* — Estados semánticos (ISA-101) — sin variante dark en Figma, mismo valor — */
+    --color-status-critico:          #FF0000;
+    --color-status-atencion:         #FF9100;
+    --color-status-comunicacion:     #FFC000;
+    --color-status-normal:           #808080;
+    --color-status-metricas:         #0096FF;
+    --color-status-correcto:         #2E7D32;
 }
  
 /* ------------------------------------------------------------
@@ -116,6 +132,14 @@
   --color-interaction-link-hover:  var(--color-interaction-link-hover);
   --color-interaction-focus-ring:  var(--color-interaction-focus-ring);
   --color-interaction-selection:   var(--color-interaction-selection);
+
+  /* — Estados semánticos — */
+  --color-status-critico:          var(--color-status-critico);
+  --color-status-atencion:         var(--color-status-atencion);
+  --color-status-comunicacion:     var(--color-status-comunicacion);
+  --color-status-normal:           var(--color-status-normal);
+  --color-status-metricas:         var(--color-status-metricas);
+  --color-status-correcto:         var(--color-status-correcto);
 
   /* — Tipografías — */
   --font-display: 'Hanken Grotesk', sans-serif;
