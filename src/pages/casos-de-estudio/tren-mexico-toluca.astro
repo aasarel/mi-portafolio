@@ -1,0 +1,583 @@
+---
+// =========================================================================
+// PÁGINA DE DETALLE CASO DE ESTUDIO: Rediseño Tren México - Toluca (MOSES-SCADA)
+// Fuente de verdad visual: Figma "02_01 Detalle caso de estudio v2" (265:5056)
+// Independiente de moses-scada.astro (oculta, ver _moses-scada.astro) — no lo reemplaza ni lo reutiliza.
+// =========================================================================
+
+import ProjectLayout from '../../layouts/ProjectLayout.astro';
+import ImageSlider from '../../components/ImageSlider.astro';
+import ReadingProgress from '../../components/ReadingProgress.astro';
+import ProjectSection from '../../components/ProjectSection.astro';
+import EditorialBody from '../../components/EditorialBody.astro';
+import HighlightBlock from '../../components/HighlightBlock.astro';
+import ImageCarousel from '../../components/ImageCarousel.astro';
+import ProjectFooter from '../../components/ProjectFooter.astro';
+import BulletList from '../../components/BulletList.astro';
+import NumberedListRow from '../../components/NumberedListRow.astro';
+import StagePill from '../../components/StagePill.astro';
+import DefinitionRow from '../../components/DefinitionRow.astro';
+import StatusSwatch from '../../components/StatusSwatch.astro';
+import PersonaCard from '../../components/PersonaCard.astro';
+import TimelineStep from '../../components/TimelineStep.astro';
+import NumberedCard from '../../components/NumberedCard.astro';
+import ScreenComparator from '../../components/ScreenComparator.astro';
+import ModuleShowcase from '../../components/ModuleShowcase.astro';
+
+import heroAntes from '../../assets/projects/tren-mexico-toluca/hero-antes.png';
+import heroDespues from '../../assets/projects/tren-mexico-toluca/hero-despues.png';
+import pantallaDetalleAntes from '../../assets/projects/tren-mexico-toluca/pantalla-detalle-original.jpeg';
+import pantallaDetalleDespues from '../../assets/projects/tren-mexico-toluca/Detalle de estructura.jpg';
+import boceto1 from '../../assets/projects/tren-mexico-toluca/boceto-1.png';
+import boceto2 from '../../assets/projects/tren-mexico-toluca/boceto-2.png';
+import boceto3 from '../../assets/projects/tren-mexico-toluca/boceto-3.png';
+import boceto4 from '../../assets/projects/tren-mexico-toluca/boceto-4.png';
+import moduleLogin from '../../assets/projects/tren-mexico-toluca/Login.jpg';
+import moduleDashboard from '../../assets/projects/tren-mexico-toluca/Dashboard.jpg';
+import moduleDetalle from '../../assets/projects/tren-mexico-toluca/Detalle de estructura.jpg';
+import modulePopup from '../../assets/projects/tren-mexico-toluca/pop-up sensor.jpg';
+
+const caseStudySteps = [
+  { id: "resumen", label: "Resumen" },
+  { id: "contexto", label: "Contexto y Desafío" },
+  { id: "auditoria", label: "Auditoría Normativa" },
+  { id: "arquitectura", label: "Arquitectura y Sistema" },
+  { id: "decisiones", label: "Decisiones Clave" },
+  { id: "impacto", label: "Impacto y Validación" },
+];
+---
+
+<ProjectLayout
+  title="MOSES - SCADA"
+  subtitle="Rediseño visual y funcional del sistema de monitoreo estructural del Tren Interurbano México - Toluca"
+  role="UX Product Designer"
+  duration="14 meses"
+  company="Grupo Sener México"
+>
+  <div>
+    <ImageSlider
+      beforeImage={heroAntes.src}
+      afterImage={heroDespues.src}
+      beforeLabel="Antes"
+      afterLabel="Después"
+    />
+  </div>
+
+  <div class="mx-auto max-w-[1920px] px-6 md:px-12 lg:px-[128px] relative mt-8">
+    <ReadingProgress steps={caseStudySteps} />
+
+    <div class="w-full max-w-[1920px] mx-auto flex flex-col gap-4">
+
+      {/* ================= 01 — RESUMEN ================= */}
+      <ProjectSection id="resumen" wide eyebrow="01 — Resumen del proyecto" title="El producto">
+        <EditorialBody>
+          <p>
+            MOSES-SCADA es la plataforma de Grupo Sener México encargada de supervisar en tiempo real el comportamiento estructural de la infraestructura ferroviaria del Tren Interurbano México – Toluca. El sistema monitorea síncronamente más de 250 sensores estructurales distribuidos en cimentaciones, viaductos, vías, puentes y componentes de la línea férrea.
+          </p>
+          <p>
+            El proyecto consistió en rediseñar de forma integral su capa visual e interactiva, eliminando la saturación cognitiva heredada del sistema original y construyendo un ecosistema de navegación modular que opera hoy activamente en el Centro de Control.
+          </p>
+          <p>
+            <strong>Usuarios objetivo:</strong> Operadores de turno e ingenieros de supervisión estructural en entornos de monitoreo continuo de misión crítica.
+          </p>
+        </EditorialBody>
+
+        <div class="flex flex-col md:flex-row gap-12 md:gap-32 mt-4">
+          <BulletList
+            eyebrow="Herramientas"
+            items={["Figma", "Notion", "Adobe Ilustrador", "SIMATIC WinCC 8.1"]}
+            bulletIcon="circle"
+          />
+          <BulletList
+            eyebrow="Responsabilidades"
+            items={[
+              "Investigación con SMEs y auditoría normativa",
+              "Arquitectura de información y navegación global",
+              "Diseño del Dashboard centralizado",
+              "Prototipado alta fidelidad y coordinación técnica",
+              "Construcción del Design System corporativo",
+            ]}
+            bulletIcon="circle"
+          />
+        </div>
+      </ProjectSection>
+
+      <div class="w-full max-w-[1296px] mx-auto my-6 border-t border-text-primary/10" role="presentation"></div>
+
+      {/* ================= 02 — CONTEXTO ================= */}
+      <ProjectSection id="contexto" wide eyebrow="02 — Contexto y desafío operativo" title="El problema técnico y de negocio">
+        <EditorialBody>
+          <p>
+            En sistemas industriales de misión crítica, la saturación visual no es un problema estético: es un riesgo de seguridad operativa. El software ya se encontraba operativo, pero su capa de presentación mostraba graves deficiencias de usabilidad, heredadas de patrones de diseño tipo Windows XP. Esto generaba tres problemas críticos:
+          </p>
+        </EditorialBody>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
+          <NumberedCard
+            number="01"
+            title="Alta carga cognitiva y omisión de alarmas"
+            description="La información competía visualmente por atención sin un punto focal claro. Los operadores desarrollaban fatiga por alarmas e impedía distinguir alertas mayores de menores."
+          />
+          <NumberedCard
+            number="02"
+            title="Desorientación en la navegación"
+            description="Las pantallas crecieron de forma aislada a lo largo del tiempo. Sin un Home centralizado, los usuarios se perdían entre módulos secundarios sin saber cómo regresar."
+          />
+          <NumberedCard
+            number="03"
+            title="Ausencia de cuadro de mando centralizado"
+            description="La propuesta original no contemplaba un Dashboard. Los stakeholders identificaron la necesidad a mitad del proyecto y solicitaron integración ágil sin alterar la lógica ya programada."
+          />
+        </div>
+
+        <HighlightBlock type="alert" tag="Reto de diseño" title="¿Cómo reducir la fatiga cognitiva y agilizar la toma de decisiones dentro de los límites rígidos de SIMATIC WinCC 8.1, sin alterar la lógica funcional preexistente?">
+          <p>
+            A diferencia del desarrollo clásico, el entorno cerrado de WinCC 8.1 impuso limitantes que redefinieron mi estrategia de diseño. Cada decisión requirió un balance costo/beneficio:
+          </p>
+        </HighlightBlock>
+
+        <div class="flex flex-col mt-2">
+          <NumberedListRow
+            number="01."
+            lead="Lo técnicamente inviable"
+            text="Se descartó la implementación de un buscador predictivo global y una barra de menú lateral colapsable, debido al costo prohibitivo en tiempos de desarrollo y recursos de scripting."
+          />
+          <NumberedListRow
+            number="02."
+            lead="Mantener la lógica intacta"
+            text="El rediseño debía ser estrictamente visual y funcional, con iteración apegada a las reglas de negocio, fórmulas de ingeniería y la arquitectura del hardware de sensores."
+          />
+        </div>
+      </ProjectSection>
+
+      <div class="w-full max-w-[1296px] mx-auto my-6 border-t border-text-primary/10" role="presentation"></div>
+
+      {/* ================= 03 — AUDITORÍA ================= */}
+      <ProjectSection id="auditoria" wide eyebrow="03 — Auditoría normativa e investigación experta" title="Metodología de investigación alternativa">
+        <EditorialBody>
+          <p>
+            Debido a cláusulas contractuales y estrictos protocolos de seguridad industrial, no fue posible obtener acceso directo a los operadores del sistema. Esta restricción redefinió la fase de descubrimiento: en lugar de entrevistas con usuarios finales, la investigación se construyó sobre dos pilares complementarios.
+          </p>
+        </EditorialBody>
+
+        <div class="flex flex-col mt-2 mb-8">
+          <NumberedListRow
+            number="01."
+            lead="Mapeo con expertos (SMEs)"
+            text="Sesiones técnicas en profundidad con ingenieros SCADA, ingenieros estructurales e ingenieros de sitio, quienes describieron cómo decodificaban variables físicas en condiciones reales de operación y qué nivel de abstracción visual necesitan para interpretar alarmas sin error bajo estrés."
+          />
+          <NumberedListRow
+            number="02."
+            lead="Auditoría de cumplimiento normativo"
+            text="Reemplazó el user research tradicional con alineación estricta a tres estándares internacionales de ingeniería. Estas normas funcionaron como sustitutos empíricos de los hallazgos de usabilidad que habrían emergido de pruebas directas con usuarios."
+          />
+        </div>
+
+        <div class="flex flex-col mb-12 border border-text-primary/10">
+          <DefinitionRow term="ISA 101" description="Diseño eficiente de interfaces humano máquina (HMI)" />
+          <DefinitionRow term="ISA 18.2" description="Gestión y priorización de alarmas operativas" />
+          <DefinitionRow term="ISO 9241-210" description="Ergonomía e interacción humano sistema" />
+        </div>
+
+        <h3 class="font-display font-semibold text-xl text-text-primary mb-6">Arquetipos de usuario</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-14">
+          <PersonaCard
+            name="Carlos Ramírez"
+            role="Operador de turno"
+            age="28"
+            description="Carlos es un técnico de monitoreo que necesita identificar y escalar alarmas críticas en segundos porque cualquier demora puede comprometer la seguridad estructural de la infraestructura ferroviaria activa. Opera en turnos de 8 hrs monitoreando múltiples pantallas simultáneamente."
+            goal="Detectar y escalar cualquier anomalía estructural antes de que se convierta en un incidente."
+            frustration="El exceso de información hace que el ojo no sepa dónde ir primero; las alarmas menores se confunden visualmente con las críticas."
+            quote="Cuando todo está encendido en rojo y naranja al mismo tiempo, ya no sé qué es urgente de verdad."
+          />
+          <PersonaCard
+            name="Brenda Herrera"
+            role="Ingeniera de supervisión"
+            age="35"
+            description="Brenda es una especialista en análisis de instrumentación que necesita acceder rápidamente a datos históricos y tendencias de sensores específicos para identificar patrones anómalos antes de que escalen a fallos estructurales. Accede por zona geográfica: viaductos, puentes, túneles."
+            goal="Identificar patrones de deterioro para activar mantenimiento preventivo antes de llegar a umbrales críticos."
+            frustration="La navegación es errática; no hay un flujo que lleve eficientemente de la vista global al detalle de un sensor específico."
+            quote="Para llegar al detalle del sensor que necesito, debo recordar exactamente los pasos a seguir. No es fácil de usar."
+          />
+        </div>
+
+        <h3 class="font-display font-semibold text-xl text-text-primary mb-6">Flujo de navegación jerárquica</h3>
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-x-16 gap-y-10">
+
+          <div class="flex flex-col gap-6">
+            <p class="font-sans font-semibold text-[15px] text-text-primary">Flujo de Carlos — Detección y escalación de alarma</p>
+            <div class="flex flex-col">
+              <TimelineStep step="Paso 01" title="Inicio de sesión" description="Pantalla de login rediseñada. Interfaz corporativa sobre base de datos externa a WinCC, sin ventana flotante nativa." />
+              <TimelineStep step="Paso 02" title="Dashboard central" description="Vista de estado global del sistema: mapa ferroviario + 5 KPIs de estado + 3 gráficos de tendencias históricas." />
+              <TimelineStep step="Paso 03" title="Identificación de alerta" description="Tarjeta de alarmas muestra contador elevado. El ícono en el mapa señala visualmente la zona geográfica afectada." />
+              <TimelineStep step="Paso 04" title="Navegación al módulo" description="Desde el mapa global se identifica y navega directamente a la zona con alarma activa." />
+              <TimelineStep step="Paso 05" title="Pantalla de detalle de estructura" description="Representación visual de la estructura con sensores georreferenciados, datos de la estructura y tabla de alertas activas con codificación semántica de severidad." />
+              <TimelineStep step="Paso 06" title="Detalle del sensor" description="Pop up modal del transductor específico con datos del sensor, nivel de alarma, gráfica de comportamiento histórico, registro de eventos y tabla de alarmas propias del sensor." isLast />
+            </div>
+            {/* Oculto a petición del cliente (2026-08-05). No borrar: reactivar quitando este comentario. */}
+            {/* <div class="flex flex-wrap gap-6 pt-2">
+              <StagePill label="Acceso" value="Login" />
+              <StagePill label="Diagnóstico" value="Dashboard" />
+              <StagePill label="Localización" value="Mapa" />
+              <StagePill label="Interpretación" value="Detalle" />
+              <StagePill label="Acción" value="Escalación" />
+            </div> */}
+          </div>
+
+          <div class="flex flex-col gap-6">
+            <p class="font-sans font-semibold text-[15px] text-text-primary">Flujo de Brenda — Análisis predictivo</p>
+            <div class="flex flex-col">
+              <TimelineStep step="Paso 01" title="Inicio de sesión" description="Pantalla de login rediseñada. Interfaz corporativa sobre base de datos externa a WinCC, sin ventana flotante nativa." />
+              <TimelineStep step="Paso 02" title="Dashboard central" description="Vista de estado global del sistema: mapa ferroviario + 5 KPIs de estado + 3 gráficos de tendencias históricas." />
+              <TimelineStep step="Paso 03" title="Identificación de alerta" description="Tarjeta de alarmas muestra contador elevado. El ícono en el mapa señala visualmente la zona geográfica afectada." />
+              <TimelineStep step="Paso 04" title="Navegación al módulo" description="Desde el menú lateral navega directamente a la zona que debe analizar." />
+              <TimelineStep step="Paso 05" title="Pantalla de detalle de estructura" description="Representación visual de la estructura con sensores georreferenciados, datos de la estructura y tabla de alertas activas con codificación semántica de severidad." />
+              <TimelineStep step="Paso 06" title="Detalle del sensor o reporte de sensores" description="Pop up modal del transductor específico con datos del sensor, nivel de alarma, gráfica de comportamiento histórico, registro de eventos y tabla de alarmas propias del sensor. Generar reporte histórico con intervalo de fechas del sensor seleccionado." isLast />
+            </div>
+            {/* Oculto a petición del cliente (2026-08-05). No borrar: reactivar quitando este comentario. */}
+            {/* <div class="flex flex-wrap gap-6 pt-2">
+              <StagePill label="Acceso" value="Login" />
+              <StagePill label="Diagnóstico" value="Dashboard" />
+              <StagePill label="Localización" value="Menú lateral" />
+              <StagePill label="Interpretación" value="Detalle" />
+              <StagePill label="Acción" value="Reporte histórico" />
+            </div> */}
+          </div>
+
+        </div>
+      </ProjectSection>
+
+      <div class="w-full max-w-[1296px] mx-auto my-6 border-t border-text-primary/10" role="presentation"></div>
+
+      {/* ================= 04 — ARQUITECTURA ================= */}
+      <ProjectSection id="arquitectura" wide eyebrow="04 — Arquitectura de información y diseño integral del sistema" title="Bocetado e iteración de baja fidelidad">
+        <EditorialBody>
+          <p>
+            La fase de bocetado generó cuatro propuestas de layout para la pantalla principal. La dirección y el especialista senior descartaron el Dashboard centralizado en esta etapa, optando por otra de las propuestas. Los bocetos finales documentan ambas: la propuesta seleccionada y el Dashboard centralizado, que quedó en reserva.
+          </p>
+          <p>
+            Esta decisión se revirtió en una fase posterior: al avanzar el desarrollo, los stakeholders identificaron la necesidad de un punto de control unificado y solicitaron integrarlo sin alterar la lógica ya programada. El boceto descartado se convirtió en la base de ese módulo.
+          </p>
+        </EditorialBody>
+
+        <div class="my-10">
+          <ImageCarousel
+            images={[
+              { src: boceto1, alt: "Boceto de baja fidelidad — propuesta de layout 1 para la pantalla principal" },
+              { src: boceto2, alt: "Boceto de baja fidelidad — propuesta de layout 2 para la pantalla principal" },
+              { src: boceto3, alt: "Boceto de baja fidelidad — propuesta de layout 3 para la pantalla principal" },
+              { src: boceto4, alt: "Boceto de baja fidelidad — Dashboard centralizado (propuesta que quedó en reserva)" },
+            ]}
+          />
+        </div>
+
+        <h3 class="font-display font-semibold text-xl text-text-primary mb-6">Los dos pilares funcionales</h3>
+        <div class="flex flex-col gap-px mb-10">
+          <NumberedCard
+            number="01"
+            fullWidth
+            title="Arquitectura de información y navegación global"
+            description="Definí layouts consistentes e iconografía unificada para que la navegación dentro del sistema se rigiera por las mismas reglas espaciales y jerárquicas. Diseñé un menú lateral estructurado por sección operativa con listas desplegables. Aunque WinCC dificultaba estas interacciones, el equipo SCADA logró emularlas mediante scripts personalizados. El resultado: menú funcional que respetó el comportamiento de la maqueta al 80%."
+          />
+          <NumberedCard
+            number="02"
+            fullWidth
+            title="Dashboard centralizado: tres zonas de lectura progresiva"
+            description="El módulo más estratégicamente relevante del proyecto: un nuevo componente que no existía en el sistema original, integrado sin alterar la lógica funcional preexistente. Zona 1 — Mapa espacial: trazo ferroviario con íconos georreferenciados y estado de alarma; solo el color del ícono comunica el estado. Zona 2 — Estado general del sistema: 5 tarjetas KPI consensuadas (alarmas de comunicación, alarmas críticas de instrumentos, dataloggers activos, trenes en circulación, switches activos). Zona 3 — Estadísticas de tendencia: 3 gráficos de comportamiento histórico de severidad para activar mantenimiento preventivo."
+          />
+        </div>
+
+        <img src={heroDespues.src} alt="Dashboard centralizado del rediseño MOSES-SCADA" class="w-full h-auto rounded-xl" />
+      </ProjectSection>
+
+      <div class="w-full max-w-[1296px] mx-auto my-6 border-t border-text-primary/10" role="presentation"></div>
+
+      {/* ================= 05 — DECISIONES ================= */}
+      <ProjectSection id="decisiones" wide eyebrow="05 — Decisiones clave de diseño" title="Perfeccionar el diseño">
+        <EditorialBody>
+          <p>
+            Debido a que el enfoque central es identificar estados de alarmas, opté por un diseño minimalista funcional de manera que las alarmas tuvieran el enfoque principal. Para ello utilicé los principios de Material Design y la norma ISA-101.
+          </p>
+        </EditorialBody>
+
+        <div class="mt-10 mb-6">
+          <span class="font-mono text-[11px] uppercase tracking-[0.2em] text-text-accent">Sistema de color semántico</span>
+          <p class="font-sans text-[15px] leading-[24px] text-text-primary/80 mt-2 max-w-[900px]">
+            Estandaricé la paleta de colores de alarmas de acuerdo con la norma ISA-101, reservando los colores vivos exclusivamente para alertamiento funcional.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-4 mb-10">
+          <StatusSwatch variant="critico" label="Crítico" description="Alarma alta prioridad" />
+          <StatusSwatch variant="atencion" label="Atención" description="Alarma media" />
+          <StatusSwatch variant="comunicacion" label="Comunicación" description="Falla de comunicación" />
+          <StatusSwatch variant="normal" label="Normal" description="Estado operativo OK" />
+          <StatusSwatch variant="metricas" label="Métricas" description="No alarma (neutral)" />
+          <StatusSwatch variant="correcto" label="Correcto" description="Estado seguro" />
+        </div>
+
+        <div class="flex flex-col gap-px mb-14">
+          <NumberedCard
+            number="Decisión 01"
+            fullWidth
+            title="Dark mode como estándar de ergonomía visual"
+            description="La adopción del esquema oscuro no fue una decisión estética sino ergonómica: el monitoreo continuo en el Centro de Control implica jornadas prolongadas frente a múltiples pantallas. Siguiendo los principios de Material Design y los estándares de Microsoft UI / Fluent 2, el dark mode mejoró el contraste tipográfico y redujo drásticamente la fatiga ocular. El fondo oscuro también hace que los colores de alerta resalten con mayor nitidez, reduciendo el tiempo de detección."
+          />
+          <NumberedCard
+            number="Decisión 02"
+            fullWidth
+            title="Separación semántica de colores ISA 101"
+            description="En entornos de alta densidad de información, la ambigüedad cromática es un riesgo cognitivo. Los colores vivos quedaron reservados exclusivamente para alertamiento funcional. Las métricas de datos cotidianos usan paleta neutrales, evitando que variaciones normales de datos sean interpretadas como alertas del sistema. Los tokens de colores quedaron documentados en el Design System para garantizar consistencia futura."
+          />
+          <NumberedCard
+            number="Decisión 03"
+            fullWidth
+            title="Tipografía y componentes para lectura técnica prolongada"
+            description="Las tipografías se seleccionaron por su legibilidad en pantallas técnicas de alta densidad de información. Los tamaños mínimos de texto en tablas de alarmas y etiquetas de sensores se definieron considerando la distancia de lectura en entornos de Centro de Control con múltiples monitores. Los tokens tipográficos quedaron documentados en el Design System para garantizar consistencia futura, alineados con ISO 9241-210."
+          />
+        </div>
+
+        <h3 class="font-display font-semibold text-xl text-text-primary mb-6">Transformación del sistema</h3>
+        <HighlightBlock type="alert" tag="Estrategia de negociación" title="Prototipar el problema antes de resolverlo">
+          <p>
+            Antes de proponer el diseño limpio, elaboré deliberadamente la versión saturada que los stakeholders pedían para evidenciar la carga cognitiva en contexto. Ver el diseño sobrecargado fue el argumento más efectivo para aceptar el rediseño minimalista.
+          </p>
+        </HighlightBlock>
+
+        <div class="my-10">
+          <ScreenComparator
+            tabs={[
+              {
+                label: "Pantalla principal",
+                antesImage: heroAntes,
+                despuesImage: heroDespues,
+                antesItems: [
+                  "Interfaz sin punto focal central",
+                  "Fondo claro con alta densidad de elementos",
+                  "Ausencia de jerarquía visual entre niveles de alarma",
+                  "Sin menú estructurado",
+                  "Sin Dashboard de estado global",
+                  "Paleta cromática inconsistente con los colores de alerta",
+                ],
+                despuesItems: [
+                  "Dark mode estructurado",
+                  "Dashboard centralizado como punto de entrada",
+                  "Mapa ferroviario limpio con estados visuales por color",
+                  "5 tarjetas KPI para diagnóstico inmediato",
+                  "Paleta semántica ISA-101 estricta",
+                  "Menú lateral estructurado · Login corporativo",
+                ],
+              },
+              {
+                label: "Pantallas secundaria",
+                antesImage: pantallaDetalleAntes,
+                despuesImage: pantallaDetalleDespues,
+                antesItems: [
+                  "Pantallas desarrolladas de forma aislada", 
+                  "Alta densidad, fondos fotográficos complejos", 
+                  "Base azul claro que inactiva visualmente las alertas",
+                  "Estructura fragmentada sin centralización de datos",
+                  "Alertas microscópicas debilitadas por iconos de sensores"
+                ],
+                despuesItems: [
+                  "Miniatura fotográfica contextual de la estructura", 
+                  "Ilustraciones lineales limpias en escala de grises", 
+                  "Botones de filtros rápidos e interactivos",
+                  "Toggle switch para mostrar/ocultar alarmas de comunicación",
+                  "Barra de navegación superior en formato carrusel"
+                ],
+              },
+            ]}
+          />
+        </div>
+
+        <div class="my-10">
+          <ModuleShowcase
+            tabs={[
+              {
+                label: "Login",
+                image: moduleLogin,
+                eyebrow: "LOGIN",
+                items: [
+                  "Interfaz corporativa construida sobre base de datos externa a WinCC",
+                  "Fondo oscuro, logo institucional, formulario limpio sin ventana flotante nativa",
+                  "Marca la identidad visual desde el primer punto de contacto",
+                ],
+              },
+              {
+                label: "Dashboard",
+                image: moduleDashboard,
+                eyebrow: "DASHBOARD",
+                items: [
+                  "Mapa ferroviario con estados de alarma por color",
+                  "5 tarjetas KPI de estado global",
+                  "3 gráficos de tendencia histórica de severidad",
+                ],
+              },
+              {
+                label: "Detalle de estructura",
+                image: moduleDetalle,
+                eyebrow: "DETALLE DE ESTRUCTURA",
+                items: [
+                  "Representación visual de la estructura con sensores georreferenciados",
+                  "Datos técnicos de la estructura",
+                  "Tabla de alertas activas con codificación semántica de severidad",
+                ],
+              },
+              {
+                label: "Pop-up sensor",
+                image: modulePopup,
+                eyebrow: "POP-UP SENSOR",
+                items: [
+                  "Datos del sensor y nivel de alarma",
+                  "Gráfica de comportamiento histórico",
+                  "Registro de eventos y tabla de alarmas propias del sensor",
+                ],
+              },
+            ]}
+          />
+        </div>
+
+        <div class="flex flex-col gap-4 pt-4">
+          <span class="font-mono text-[11px] uppercase tracking-[0.2em] text-text-accent">Sistema en producción</span>
+          <p class="font-sans text-[16px] leading-[26px] text-text-primary/75 max-w-[900px]">
+            El prototipo de alta fidelidad es, en este caso, el sistema mismo: MOSES-SCADA opera hoy en tiempo real en el Centro de Control del Tren Interurbano México – Toluca. El ciclo en Figma culminó con la entrega técnica al equipo de desarrollo SCADA, que implementó cada pantalla dentro de los márgenes técnicos del entorno WinCC 8.1.
+          </p>
+          <div class="flex flex-col gap-3">
+            <button
+              type="button"
+              aria-describedby="figma-gate-message"
+              data-figma-gate-trigger
+              class="inline-flex w-fit items-center px-8 py-4 rounded-full bg-text-primary text-bg-primary font-sans font-medium text-[15px] tracking-tight hover:opacity-80 transition-opacity duration-300 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-text-accent/50"
+            >
+              Ver el prototipo en Figma
+            </button>
+            <p
+              id="figma-gate-message"
+              data-figma-gate-message
+              class="font-mono text-[11px] uppercase tracking-[0.15em] text-text-accent max-w-[420px] opacity-0 max-h-0 overflow-hidden transition-all duration-300"
+            >
+              Vista restringida — se requieren permisos de administrador para acceder a este prototipo.
+            </p>
+          </div>
+        </div>
+      </ProjectSection>
+
+      <div class="w-full max-w-[1296px] mx-auto my-6 border-t border-text-primary/10" role="presentation"></div>
+
+      {/* ================= 06 — IMPACTO ================= */}
+      <ProjectSection id="impacto" wide eyebrow="06 — Impacto y validación cualitativa" title="Resultados del rediseño">
+        <EditorialBody>
+          <p>
+            Actualmente, el sistema MOSES-SCADA se encuentra desplegado y operando en tiempo real en el Centro de Control del Tren Interurbano México-Toluca. Los protocolos de seguridad industrial y cláusulas contractuales impidieron el uso de analíticas cuantitativas directas. Las pruebas de entrega y la capacitación técnica a operadores arrojaron resultados cualitativos de alto valor:
+          </p>
+        </EditorialBody>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 my-8">
+          <NumberedCard
+            variant="insight"
+            number="01"
+            title="Velocidad de reacción síncrona"
+            description="Durante las capacitaciones, los operadores identificaron las zonas geográficas con alertas críticas con mayor rapidez que con el sistema anterior. El Dashboard centralizado y el mapa con estados visuales resultaron ser los elementos con mayor impacto en el tiempo de respuesta."
+          />
+          <NumberedCard
+            variant="insight"
+            number="02"
+            title="Reducción de la curva de aprendizaje"
+            description="La reestructura del menú lateral y la navegación global fue validada directamente por los operadores durante las sesiones de capacitación técnica."
+          />
+          <NumberedCard
+            variant="insight"
+            number="03"
+            title="Precisión en diagnósticos"
+            description="El detalle visual unificado de las estructuras y sus instrumentos mitigó las confusiones de interpretación que generaba la interfaz anterior. Los operadores distinguieron con claridad los niveles de alarma desde el primer turno de operación."
+          />
+        </div>
+
+        <HighlightBlock type="neutral" tag="Impacto organizacional" title="Un solo proyecto bien ejecutado transformó la forma en que la empresa diseña y entrega software industrial">
+          <p>
+            <em>“Ahora ya sé exactamente cómo llegar a una pantalla; moverme entre las opciones del menú y las pantallas es mucho más sencillo.”</em>
+          </p>
+          <p>
+            Más allá de las pantallas, el Design System construido durante el proyecto se convirtió en el sello visual de Grupo Sener México división Mobility, siendo adoptado de forma inmediata por tres aplicativos subsecuentes.
+          </p>
+        </HighlightBlock>
+
+        <h3 class="font-display font-semibold text-xl text-text-primary mt-14 mb-6">Qué aprendí</h3>
+        <div class="flex flex-col gap-px mb-14">
+          <NumberedCard
+            variant="insight"
+            fullWidth
+            title="Fusión de estándares industriales al UX tradicional"
+            description="En sistemas de misión crítica, los marcos clásicos de UX no se reemplazan; se fortalecen mediante estándares industriales. La combinación de normas como ISA-101 e ISO 9241-210 con la teoría tradicional de diseño genera una base indiscutible para la toma de decisiones al crear soluciones para productos digitales."
+          />
+          <NumberedCard
+            variant="insight"
+            fullWidth
+            title="La negociación técnica también es diseño"
+            description="La colaboración continua con desarrollo fue tan determinante como los prototipos. Sin esa alineación técnica, componentes clave como el menú lateral y el nuevo acceso no habrían sido viables."
+          />
+          <NumberedCard
+            variant="insight"
+            fullWidth
+            title="Prototipar la idea del cliente como estrategia"
+            description="Construir la versión saturada que pedían los stakeholders fue la forma más rápida de hacer que el proyecto avanzara. Verlo en pantalla les permitió entender, sin discusiones, por qué la propuesta que estaba justificada por una investigación era la opción recomendada."
+          />
+          <NumberedCard
+            variant="insight"
+            fullWidth
+            title="El scope creep puede ser una señal de interés"
+            description="Cuando surgieron nuevos requerimientos a partir del prototipo inicial, quedó claro que el producto ganaba relevancia para el negocio. La clave estuvo en negociar el cómo sin comprometer la visión del por qué."
+          />
+        </div>
+
+        <h3 class="font-display font-semibold text-xl text-text-primary mb-6">Próximos pasos</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <NumberedCard
+            variant="insight"
+            number="01"
+            title="Maduración del Design System"
+            description="Formalizar la documentación con especificaciones para desarrolladores SCADA, incluyendo restricciones técnicas de WinCC y reglas de implementación vía scripting. Esto reduciría el tiempo de desarrollo de nuevas pantallas y garantizaría la consistencia en toda la organización."
+          />
+          <NumberedCard
+            variant="insight"
+            number="02"
+            title="Validación cuantitativa con métricas operativas"
+            description="Establecer indicadores medibles en los próximos proyectos: tiempo de detección de alarma crítica, tasa de errores de interpretación por turno, tiempo de navegación a pantalla principal. Estos datos permitirán validar con cifras lo que la validación cualitativa ya confirmó."
+          />
+          <NumberedCard
+            variant="insight"
+            number="03"
+            title="Expansión del framework a nuevos proyectos"
+            description="Dos aplicativos adicionales ya están mapeados para heredar este framework. El paso siguiente es acompañar activamente esas implementaciones para asegurar que la arquitectura de información y el sistema de alarmas se adapten correctamente a nuevos contextos industriales sin perder coherencia."
+          />
+        </div>
+      </ProjectSection>
+
+    </div>
+  </div>
+
+  <ProjectFooter
+    nextProject={{ label: "PAYROL", href: "/payrol" }}
+  />
+</ProjectLayout>
+
+<script>
+  // Gate de permisos del botón "Ver el prototipo en Figma": no navega, revela
+  // un mensaje de acceso restringido al hacer clic o al recibir foco por teclado.
+  function initFigmaGate() {
+    document.querySelectorAll<HTMLButtonElement>('[data-figma-gate-trigger]').forEach((btn) => {
+      const message = btn.parentElement?.querySelector<HTMLElement>('[data-figma-gate-message]');
+      if (!message) return;
+      const reveal = () => {
+        message.classList.remove('opacity-0', 'max-h-0');
+        message.classList.add('opacity-100', 'max-h-20');
+      };
+      btn.addEventListener('click', reveal);
+      btn.addEventListener('focus', reveal);
+    });
+  }
+
+  document.addEventListener('astro:page-load', initFigmaGate);
+  initFigmaGate();
+</script>
