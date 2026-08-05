@@ -1,0 +1,67 @@
+---
+// PersonaCard.astro — Arquetipo de usuario (Figma 298:5647).
+// avatarSrc es opcional: sin foto real de la persona, se muestra un círculo con iniciales.
+
+import { Image } from 'astro:assets';
+
+interface Props {
+  name: string;
+  role: string;
+  age: string;
+  description: string;
+  goal: string;
+  frustration: string;
+  quote: string;
+  avatarSrc?: ImageMetadata;
+}
+
+const { name, role, age, description, goal, frustration, quote, avatarSrc } = Astro.props;
+
+const initials = name
+  .split(' ')
+  .map((part) => part[0])
+  .slice(0, 2)
+  .join('')
+  .toUpperCase();
+---
+
+<div class="flex flex-col gap-5 w-full p-7 border border-text-primary/10 rounded-xl">
+
+  <div class="flex items-center gap-4">
+    {avatarSrc ? (
+      <Image src={avatarSrc} alt={name} width={48} height={48} class="w-12 h-12 rounded-full object-cover shrink-0" />
+    ) : (
+      <div class="w-12 h-12 rounded-full bg-bg-tertiary flex items-center justify-center font-display font-semibold text-[15px] text-text-accent shrink-0" aria-hidden="true">
+        {initials}
+      </div>
+    )}
+    <div class="flex flex-col gap-0.5">
+      <span class="font-display font-semibold text-[15px] text-text-primary">{name}</span>
+      <span class="font-sans font-medium text-[12px] text-text-tertiary">{role} · {age} años</span>
+    </div>
+  </div>
+
+  <div class="w-full border-t border-text-primary/10"></div>
+
+  <p class="font-sans text-[13px] leading-[22px] text-text-primary/80 text-justify">
+    {description}
+  </p>
+
+  <div class="flex flex-col gap-1.5">
+    <span class="font-sans font-semibold text-[12px] text-text-accent">META PRINCIPAL</span>
+    <p class="font-sans text-[13px] leading-[22px] text-text-primary/80">{goal}</p>
+  </div>
+
+  <div class="flex flex-col gap-1.5">
+    <span class="font-sans font-semibold text-[12px] text-text-accent">FRUSTRACIÓN PRINCIPAL</span>
+    <p class="font-sans text-[13px] leading-[22px] text-text-primary/80">{frustration}</p>
+  </div>
+
+  <blockquote
+    class="border-l-2 border-text-accent px-4 py-3 font-display italic text-[15px] leading-[24px] text-text-secondary"
+    style="background-color: color-mix(in srgb, var(--color-accent-amber) 12%, transparent);"
+  >
+    “{quote}”
+  </blockquote>
+
+</div>

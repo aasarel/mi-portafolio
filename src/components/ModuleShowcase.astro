@@ -1,0 +1,29 @@
+---
+// ModuleShowcase.astro — "Navegador de Módulos" con pestañas (Figma 358:7642).
+// 4 pestañas: Login / Dashboard / Detalle de estructura / Pop-up sensor.
+// El contenido de cada panel vive en ModuleShowcasePanel.astro (ver esa nota sobre
+// por qué Astro exige slots estáticos en vez de generarlos en un .map()).
+
+import TabbedShowcase from './TabbedShowcase.astro';
+import ModuleShowcasePanel from './ModuleShowcasePanel.astro';
+
+interface ModuleTab {
+  label: string;
+  image?: ImageMetadata; // opcional: placeholder "[ Captura pendiente ]" si aún no se proporciona el asset
+  eyebrow: string;
+  items: string[];
+}
+
+interface Props {
+  tabs: ModuleTab[];
+}
+
+const { tabs } = Astro.props;
+---
+
+<TabbedShowcase tabs={tabs.map((t) => t.label)}>
+  {tabs[0] && <ModuleShowcasePanel slot="panel-0" tab={tabs[0]} />}
+  {tabs[1] && <ModuleShowcasePanel slot="panel-1" tab={tabs[1]} />}
+  {tabs[2] && <ModuleShowcasePanel slot="panel-2" tab={tabs[2]} />}
+  {tabs[3] && <ModuleShowcasePanel slot="panel-3" tab={tabs[3]} />}
+</TabbedShowcase>

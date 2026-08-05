@@ -1,0 +1,56 @@
+---
+// ScreenComparatorPanel.astro — Contenido de un panel de ScreenComparator.astro.
+// Extraído a un componente propio porque Astro exige slot="..." estático: no se puede
+// generar `slot={`panel-${i}`}` dentro de un .map() en el componente padre.
+
+import { Image } from 'astro:assets';
+import BulletList from './BulletList.astro';
+
+interface ComparatorTab {
+  label: string;
+  antesItems: string[];
+  antesImage?: ImageMetadata; // opcional: placeholder "[ Captura pendiente ]" mientras no exista el asset (ver ModuleShowcasePanel)
+  despuesItems: string[];
+  despuesImage?: ImageMetadata;
+}
+
+interface Props {
+  tab: ComparatorTab;
+}
+
+const { tab } = Astro.props;
+---
+
+<div class="flex flex-col md:flex-row gap-8 items-start w-full">
+
+  <div class="flex-1 min-w-0 flex flex-col gap-4 px-0 md:px-6 py-4 w-full">
+    <BulletList eyebrow="ANTES" items={tab.antesItems} bulletIcon="line" />
+    <div class="w-full flex justify-center bg-bg-primary">
+      {tab.antesImage ? (
+        <Image src={tab.antesImage} alt={`Pantalla original: ${tab.label}`} width={500} height={281} class="object-contain pointer-events-none" />
+      ) : (
+        <div class="w-[500px] max-w-full aspect-[500/281] flex items-center justify-center">
+          <span class="font-mono text-[11px] uppercase tracking-[0.15em] text-text-tertiary text-center px-4">
+            [ Captura pendiente — {tab.label} ]
+          </span>
+        </div>
+      )}
+    </div>
+  </div>
+
+  <div class="flex-1 min-w-0 flex flex-col gap-4 px-0 md:px-6 py-4 w-full">
+    <BulletList eyebrow="DESPUÉS" items={tab.despuesItems} bulletIcon="arrow" />
+    <div class="w-full flex justify-center bg-bg-primary">
+      {tab.despuesImage ? (
+        <Image src={tab.despuesImage} alt={`Pantalla rediseñada: ${tab.label}`} width={500} height={281} class="object-contain pointer-events-none" />
+      ) : (
+        <div class="w-[500px] max-w-full aspect-[500/281] flex items-center justify-center">
+          <span class="font-mono text-[11px] uppercase tracking-[0.15em] text-text-tertiary text-center px-4">
+            [ Captura pendiente — {tab.label} ]
+          </span>
+        </div>
+      )}
+    </div>
+  </div>
+
+</div>

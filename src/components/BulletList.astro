@@ -1,0 +1,37 @@
+---
+// BulletList.astro — Lista con eyebrow mono + viñetas, reutilizada en:
+//   - ProjectSection "01 Resumen" (Herramientas / Responsabilidades) → bulletIcon="circle"
+//   - ScreenComparator, columna ANTES → bulletIcon="line"
+//   - ScreenComparator, columna DESPUÉS → bulletIcon="arrow"
+//   - ModuleShowcase → bulletIcon="circle"
+
+interface Props {
+  eyebrow: string;
+  items: string[];
+  bulletIcon?: 'circle' | 'line' | 'arrow';
+}
+
+const { eyebrow, items, bulletIcon = 'circle' } = Astro.props;
+
+const eyebrowClass = bulletIcon === 'line' ? 'text-text-tertiary' : 'text-text-accent';
+const glyph = bulletIcon === 'line' ? '–' : bulletIcon === 'arrow' ? '→' : null;
+const glyphClass = bulletIcon === 'arrow' ? 'text-text-accent' : 'text-text-tertiary';
+---
+
+<div class="flex flex-col gap-4">
+  <span class={`font-mono text-[11px] uppercase tracking-[0.2em] ${eyebrowClass}`}>
+    {eyebrow}
+  </span>
+  <ul class="flex flex-col gap-2.5">
+    {items.map((item) => (
+      <li class="flex items-start gap-3 font-sans text-[14px] leading-[22px]">
+        {glyph ? (
+          <span class={`shrink-0 font-mono text-[13px] ${glyphClass}`} aria-hidden="true">{glyph}</span>
+        ) : (
+          <span class="shrink-0 mt-[9px] w-1 h-1 rounded-full bg-text-accent" aria-hidden="true"></span>
+        )}
+        <span class="text-text-primary/80">{item}</span>
+      </li>
+    ))}
+  </ul>
+</div>

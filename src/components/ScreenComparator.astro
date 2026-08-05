@@ -1,0 +1,29 @@
+---
+// ScreenComparator.astro — Comparador Antes/Después con pestañas (Figma 358:7256).
+// Consume TabbedShowcase.astro; el contenido de cada panel vive en ScreenComparatorPanel.astro
+// porque Astro exige slot="..." estático (no se puede generar el nombre en un .map()).
+
+import TabbedShowcase from './TabbedShowcase.astro';
+import ScreenComparatorPanel from './ScreenComparatorPanel.astro';
+
+interface ComparatorTab {
+  label: string;
+  antesItems: string[];
+  antesImage?: ImageMetadata;
+  despuesItems: string[];
+  despuesImage?: ImageMetadata;
+}
+
+interface Props {
+  tabs: ComparatorTab[];
+}
+
+const { tabs } = Astro.props;
+---
+
+<TabbedShowcase tabs={tabs.map((t) => t.label)}>
+  {tabs[0] && <ScreenComparatorPanel slot="panel-0" tab={tabs[0]} />}
+  {tabs[1] && <ScreenComparatorPanel slot="panel-1" tab={tabs[1]} />}
+  {tabs[2] && <ScreenComparatorPanel slot="panel-2" tab={tabs[2]} />}
+  {tabs[3] && <ScreenComparatorPanel slot="panel-3" tab={tabs[3]} />}
+</TabbedShowcase>

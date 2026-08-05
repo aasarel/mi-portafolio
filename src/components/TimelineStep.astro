@@ -1,0 +1,28 @@
+---
+// TimelineStep.astro — Paso de flujo con línea vertical continua (Figma 298:5764).
+// La línea es un div absoluto (mismo patrón que el timeline de cv.astro), no un
+// pseudo-elemento, para alinearla con precisión al punto circular de cada paso.
+
+interface Props {
+  step: string;        // ej: "Paso 01"
+  title: string;
+  description: string;
+  isLast?: boolean;
+}
+
+const { step, title, description, isLast = false } = Astro.props;
+---
+
+<div class="flex gap-6 relative pb-8 last:pb-0">
+  <div class="flex flex-col items-center w-3 shrink-0 relative">
+    <div class="w-2 h-2 rounded-full bg-text-accent ring-4 ring-bg-primary z-10 mt-1.5"></div>
+    {!isLast && (
+      <div class="absolute top-1.5 bottom-0 left-1/2 -translate-x-1/2 w-px bg-text-accent/40"></div>
+    )}
+  </div>
+  <div class="flex flex-col gap-1.5 flex-1">
+    <span class="font-mono text-[10px] font-medium uppercase tracking-[0.15em] text-text-accent">{step}</span>
+    <h4 class="font-sans font-medium text-[16px] text-text-primary">{title}</h4>
+    <p class="font-sans text-[13px] leading-[22px] text-text-secondary text-justify">{description}</p>
+  </div>
+</div>

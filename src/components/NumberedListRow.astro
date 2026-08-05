@@ -1,0 +1,25 @@
+---
+// NumberedListRow.astro — Fila horizontal: número mono accent + lead en negrita + texto continuo.
+// Distinto de la lista <ol> de EditorialBody (que apila verticalmente con el número a la izquierda
+// del párrafo): aquí el número y el párrafo comparten una fila flex, como en el Figma "List Item"
+// (verificado contra el nodo 298:5556 — no es contenido de EditorialBody).
+// Envolver varias instancias en un contenedor con `divide-y divide-text-primary/10` para los
+// separadores entre filas.
+
+interface Props {
+  number: string; // ej: "01."
+  lead: string;   // fragmento en negrita al inicio del párrafo
+  text: string;   // resto del párrafo
+}
+
+const { number, lead, text } = Astro.props;
+---
+
+<div class="flex items-center gap-6 py-4">
+  <span class="shrink-0 font-mono font-bold text-[14px] tracking-[0.04em] text-text-accent">
+    {number}
+  </span>
+  <p class="flex-1 font-sans text-[15px] leading-[24px] text-text-primary/80 text-justify">
+    <strong class="font-semibold text-text-primary">{lead}:</strong> {text}
+  </p>
+</div>

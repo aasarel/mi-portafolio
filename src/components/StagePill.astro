@@ -1,0 +1,18 @@
+---
+// StagePill.astro — Píldora label/valor. Mismo patrón visual que la fila
+// Rol/Duración/Empresa de ProjectLayout.astro (líneas 73-86), extraído aquí como
+// componente porque ese patrón no estaba componetizado y se repite en los
+// resúmenes horizontales de flujo (sección 03: ACCESO · DIAGNÓSTICO · ...).
+
+interface Props {
+  label: string; // ej: "ACCESO"
+  value: string; // ej: "Login"
+}
+
+const { label, value } = Astro.props;
+---
+
+<div class="flex flex-col items-start gap-2 min-w-[100px]">
+  <span class="font-mono text-[10px] uppercase tracking-[0.2em] text-text-accent">{label}</span>
+  <span class="font-sans text-[13px] font-normal leading-normal text-text-primary/80">{value}</span>
+</div>

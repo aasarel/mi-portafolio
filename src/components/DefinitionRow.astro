@@ -1,0 +1,19 @@
+---
+// DefinitionRow.astro — Fila término/descripción para normas o glosarios (ISA-101, ISA-18.2, ISO 9241-210).
+
+interface Props {
+  term: string;
+  description: string;
+}
+
+const { term, description } = Astro.props;
+---
+
+<div class="flex items-center gap-6 py-3.5 border-b border-text-primary/10 last:border-b-0">
+  <span class="shrink-0 w-[128px] font-sans font-semibold text-[12px] text-text-accent">
+    {term}
+  </span>
+  <span class="flex-1 font-sans text-[15px] leading-[24px] text-text-secondary">
+    {description}
+  </span>
+</div>

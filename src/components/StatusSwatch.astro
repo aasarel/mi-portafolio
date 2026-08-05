@@ -1,0 +1,24 @@
+---
+// StatusSwatch.astro — Bloque sólido de color semántico ISA-101.
+// El fondo ES el color del estado (no un punto/badge); "comunicacion" es la única
+// variante con texto oscuro, por contraste (verificado contra el maestro Figma 256:3873).
+
+interface Props {
+  variant: 'critico' | 'atencion' | 'comunicacion' | 'normal' | 'metricas' | 'correcto';
+  label: string;
+  description: string;
+}
+
+const { variant, label, description } = Astro.props;
+
+const bgVar = `var(--color-status-${variant})`;
+const isLight = variant === 'comunicacion';
+---
+
+<div
+  class={`flex flex-col justify-center gap-1 w-[169px] px-4 py-2 rounded ${isLight ? 'text-text-primary' : 'text-text-inverse'}`}
+  style={`background-color: ${bgVar};`}
+>
+  <span class="font-sans font-medium text-[14px] leading-tight">{label}</span>
+  <span class={`font-sans text-[13px] leading-tight ${isLight ? 'opacity-70' : 'opacity-85'}`}>{description}</span>
+</div>

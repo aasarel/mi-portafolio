@@ -1,0 +1,123 @@
+---
+// TabbedShowcase.astro — Base interactiva de pestañas con barra de selección animada.
+// Consumida por ScreenComparator.astro (2 pestañas) y ModuleShowcase.astro (4 pestañas).
+// Cada pestaña recibe su contenido vía slot nombrado: slot="panel-0", slot="panel-1", etc.
+// Soporta múltiples instancias independientes en la misma página (patrón querySelectorAll
+// de ProjectRow.astro): cada una gestiona su propio tab activo sin interferir con las demás.
+
+interface Props {
+  tabs: string[];
+}
+
+const { tabs } = Astro.props;
+
+// Sufijo único por instancia para enlazar aria-controls/aria-labelledby sin colisiones
+// entre ScreenComparator y ModuleShowcase en la misma página.
+const uid = Math.random().toString(36).slice(2, 8);
+---
+
+<div class="tabbed-showcase w-full flex flex-col gap-6 bg-bg-primary" data-tabbed-showcase>
+
+  <div class="flex flex-col">
+    <div class="flex gap-8 items-end overflow-x-auto" role="tablist">
+      {tabs.map((tab, i) => (
+        <button
+          type="button"
+          role="tab"
+          id={`tab-${uid}-${i}`}
+          aria-controls={`panel-${uid}-${i}`}
+          aria-selected={i === 0 ? 'true' : 'false'}
+          data-tab-index={i}
+          class={`tab-btn shrink-0 pb-3 font-sans text-[18px] whitespace-nowrap transition-colors duration-300 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-text-accent/40 rounded-sm ${i === 0 ? 'font-semibold text-text-primary' : 'font-normal text-text-primary/45'}`}
+        >
+          {tab}
+        </button>
+      ))}
+    </div>
+    <div class="relative w-full h-px bg-text-primary/10">
+      <div class="tab-indicator absolute bottom-0 left-0 h-[2px] bg-accent-burgundy transition-all duration-400 ease-out" style="width:0px; transform: translateX(0px);"></div>
+    </div>
+  </div>
+
+  <div class="tab-panels w-full">
+    {/* Astro exige nombres de slot estáticos: no se puede generar `panel-${i}` en un .map().
+        Se desenrollan explícitamente hasta 4 pestañas (el máximo que consume esta página,
+        en ModuleShowcase); cada panel solo se renderiza si existe esa pestaña. */}
+    {tabs[0] !== undefined && (
+      <div class="tab-panel w-full" data-panel-index={0} role="tabpanel" id={`panel-${uid}-0`} aria-labelledby={`tab-${uid}-0`}>
+        <slot name="panel-0" />
+      </div>
+    )}
+    {tabs[1] !== undefined && (
+      <div class="tab-panel w-full" data-panel-index={1} role="tabpanel" id={`panel-${uid}-1`} aria-labelledby={`tab-${uid}-1`} hidden>
+        <slot name="panel-1" />
+      </div>
+    )}
+    {tabs[2] !== undefined && (
+      <div class="tab-panel w-full" data-panel-index={2} role="tabpanel" id={`panel-${uid}-2`} aria-labelledby={`tab-${uid}-2`} hidden>
+        <slot name="panel-2" />
+      </div>
+    )}
+    {tabs[3] !== undefined && (
+      <div class="tab-panel w-full" data-panel-index={3} role="tabpanel" id={`panel-${uid}-3`} aria-labelledby={`tab-${uid}-3`} hidden>
+        <slot name="panel-3" />
+      </div>
+    )}
+  </div>
+
+</div>
+
+<script>
+  function initTabbedShowcases() {
+    document.querySelectorAll<HTMLElement>('[data-tabbed-showcase]').forEach((root) => {
+      const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('.tab-btn'));
+      const panels = Array.from(root.querySelectorAll<HTMLElement>('.tab-panel'));
+      const indicator = root.querySelector<HTMLElement>('.tab-indicator');
+
+      const activate = (index: number) => {
+        tabs.forEach((tab, i) => {
+          const active = i === index;
+          tab.setAttribute('aria-selected', String(active));
+          tab.classList.toggle('font-semibold', active);
+          tab.classList.toggle('text-text-primary', active);
+          tab.classList.toggle('font-normal', !active);
+          tab.classList.toggle('text-text-primary/45', !active);
+        });
+        panels.forEach((panel, i) => {
+          panel.hidden = i !== index;
+        });
+        const activeTab = tabs[index];
+        // offsetLeft/offsetWidth se miden contra el offsetParent (el ancestro
+        // posicionado más cercano), que aquí es un contenedor lejano de la página
+        // (no el track del indicador), así que duplican el padding del layout.
+        // getBoundingClientRect() da la posición real en pantalla y se resta contra
+        // el propio contenedor relative del indicador, sin depender de la cadena
+        // de ancestros posicionados.
+        if (activeTab && indicator) {
+          const trackRect = indicator.parentElement!.getBoundingClientRect();
+          const tabRect = activeTab.getBoundingClientRect();
+          indicator.style.width = `${tabRect.width}px`;
+          indicator.style.transform = `translateX(${tabRect.left - trackRect.left}px)`;
+        }
+      };
+
+      tabs.forEach((tab, i) => {
+        tab.addEventListener('click', () => activate(i));
+      });
+
+      const reactivateCurrent = () => {
+        const activeIndex = tabs.findIndex((t) => t.getAttribute('aria-selected') === 'true');
+        activate(activeIndex === -1 ? 0 : activeIndex);
+      };
+
+      activate(0);
+      // Recalcula cuando la fuente termina de cargar: el ancho real del texto
+      // puede cambiar respecto a la fuente de reemplazo usada en el primer render.
+      document.fonts.ready.then(reactivateCurrent);
+      window.addEventListener('resize', reactivateCurrent);
+    });
+  }
+
+  document.addEventListener('astro:page-load', initTabbedShowcases);
+  initTabbedShowcases();
+</script>

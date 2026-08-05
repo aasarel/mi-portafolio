@@ -1,0 +1,65 @@
+---
+// NumberedCard.astro — Tarjeta numerada con dos variantes (Figma):
+//   - decision: maestro 281:5536 / instancia fullWidth 358:7227 — mismo layout vertical
+//     en ambos casos (número, título, cuerpo); fullWidth solo cambia el ancho del contenedor.
+//   - insight:  maestro 256:3688 (Default/Hover) — número mono, hover de fondo, cita opcional.
+
+interface Props {
+  number?: string;        // ej: "01" o "Decisión 01"; omitir para las cards de "Qué aprendí" sin número
+  title: string;
+  description: string;
+  variant?: 'decision' | 'insight';
+  quote?: string;          // solo aplica a variant="insight"
+  fullWidth?: boolean;     // ancho completo apilado en vez de celda de grid
+}
+
+const {
+  number,
+  title,
+  description,
+  variant = 'decision',
+  quote,
+  fullWidth = false,
+} = Astro.props;
+
+const isInsight = variant === 'insight';
+const widthClass = fullWidth ? 'w-full' : 'w-full h-full';
+---
+
+{isInsight ? (
+  <div class={`group/card ${widthClass} flex flex-col items-start gap-2 px-7 py-8 border border-bg-tertiary bg-bg-primary hover:bg-bg-secondary transition-colors duration-500 ease-out`}>
+    {number && (
+      <span class="font-mono font-bold text-[11px] tracking-[0.35em] text-text-accent">
+        {number}
+      </span>
+    )}
+    <h3 class="font-sans font-semibold text-[18px] leading-[1.5] text-text-primary">
+      {title}
+    </h3>
+    <p class="font-sans text-[13px] leading-[1.4] text-text-secondary text-justify">
+      {description}
+    </p>
+    {quote && (
+      <blockquote
+        class="mt-2 border-l-2 border-text-accent px-3 py-2 font-sans italic text-[12px] leading-[1.5] text-text-secondary"
+        style="background-color: color-mix(in srgb, var(--color-accent-amber) 12%, transparent);"
+      >
+        “{quote}”
+      </blockquote>
+    )}
+  </div>
+) : (
+  <div class={`${widthClass} flex flex-col items-start gap-3 p-7 border border-text-primary/10`}>
+    {number && (
+      <span class="font-sans font-semibold text-[12px] tracking-[0.02em] text-text-accent">
+        {number}
+      </span>
+    )}
+    <h3 class="font-sans font-semibold text-[18px] leading-[1.5] text-text-primary">
+      {title}
+    </h3>
+    <p class="font-sans text-[15px] leading-[1.5] text-text-primary/85">
+      {description}
+    </p>
+  </div>
+)}

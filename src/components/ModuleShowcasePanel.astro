@@ -1,0 +1,36 @@
+---
+// ModuleShowcasePanel.astro — Contenido de un panel de ModuleShowcase.astro.
+// Extraído a un componente propio por la misma razón que ScreenComparatorPanel.astro:
+// Astro exige slot="..." estático, no generable dentro de un .map() del padre.
+
+import { Image } from 'astro:assets';
+import BulletList from './BulletList.astro';
+
+interface ModuleTab {
+  label: string;
+  image?: ImageMetadata;
+  eyebrow: string;
+  items: string[];
+}
+
+interface Props {
+  tab: ModuleTab;
+}
+
+const { tab } = Astro.props;
+---
+
+<div class="flex flex-col lg:flex-row gap-8 items-start w-full">
+  <div class="w-full lg:w-2/3 aspect-[1000/563] shrink-0 overflow-hidden bg-bg-secondary flex items-center justify-center">
+    {tab.image ? (
+      <Image src={tab.image} alt={tab.label} width={1000} height={563} class="w-full h-full object-cover" />
+    ) : (
+      <span class="font-mono text-[11px] uppercase tracking-[0.15em] text-text-tertiary">
+        [ Captura pendiente — {tab.label} ]
+      </span>
+    )}
+  </div>
+  <div class="w-full lg:flex-1 px-0 lg:px-2 py-2">
+    <BulletList eyebrow={tab.eyebrow} items={tab.items} bulletIcon="circle" />
+  </div>
+</div>
