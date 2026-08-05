@@ -4,22 +4,27 @@
 // ABRAHAM DESIGN SYSTEM — FUENTE DE VERDAD PARA PRODUCCIÓN
 // Framework: Astro v6 + Tailwind CSS v4 nativo
 // =========================================================================
+// OCULTA A PROPÓSITO: el prefijo "_" excluye este archivo del router de Astro
+// (no genera ruta, no aparece en el build). Reemplazada por tren-mexico-toluca.astro
+// en /proyectos. Se conserva el archivo intacto por si se necesita reactivar o
+// consultar su contenido — no está enlazada desde ninguna otra página.
+// =========================================================================
 
 // Importación del Layout principal que inyecta la envolvente del proyecto y metadatos
-import ProjectLayout from '../layouts/ProjectLayout.astro';
+import ProjectLayout from '../../layouts/ProjectLayout.astro';
 
 // Importación de componentes interactivos y estructurales de la maqueta sagrada
-import ImageSlider from '../components/ImageSlider.astro';
-import ReadingProgress from '../components/ReadingProgress.astro';
-import ProjectSection from '../components/ProjectSection.astro';
-import EditorialBody from '../components/EditorialBody.astro';
-import MetricCard from '../components/MetricCard.astro';
+import ImageSlider from '../../components/ImageSlider.astro';
+import ReadingProgress from '../../components/ReadingProgress.astro';
+import ProjectSection from '../../components/ProjectSection.astro';
+import EditorialBody from '../../components/EditorialBody.astro';
+import MetricCard from '../../components/MetricCard.astro';
 
 // Importación nativa de Assets desde src/assets/ para procesamiento y optimización de Astro v6
-import imgAntes from '../assets/projects/moses/slider-antes.webp';
-import imgDespues from '../assets/projects/moses/slider-despues.webp';
-import ImageGrid from '../components/ImageGrid.astro';
-import ProjectFooter from '../components/ProjectFooter.astro';
+import imgAntes from '../../assets/projects/moses/slider-antes.webp';
+import imgDespues from '../../assets/projects/moses/slider-despues.webp';
+import ImageGrid from '../../components/ImageGrid.astro';
+import ProjectFooter from '../../components/ProjectFooter.astro';
 
 // ARREGLO DE NAVEGACIÓN LATERAL (ReadingProgress) — 8 Estaciones metodológicas estrictas
 // Se inyecta forzosamente la estación "inicio" en la posición 0 para control de scroll al tope
@@ -35,27 +40,27 @@ const caseStudySteps = [
 ];
 ---
 
-<ProjectLayout 
-  title="MOSES - SCADA" 
-  subtitle="Rediseño visual y funcional del sistema de monitoreo estructural del Tren Interurbano México - Toluca" 
-  role="UX Product Designer" 
-  duration="14 meses" 
+<ProjectLayout
+  title="MOSES - SCADA"
+  subtitle="Rediseño visual y funcional del sistema de monitoreo estructural del Tren Interurbano México - Toluca"
+  role="UX Product Designer"
+  duration="14 meses"
   company="Grupo Sener México"
 >
   {/* Contenedor de anclaje inicial para que la navegación lateral regrese al tope absoluto */}
   <div id="inicio" class="scroll-mt-20">
     {/* Componente de Apertura Visual: Slider interactivo con imágenes optimizadas y copys validados por UX Writing */}
-    <ImageSlider 
-      beforeImage={imgAntes.src} 
-      afterImage={imgDespues.src} 
-      beforeLabel="Antes" 
-      afterLabel="Después" 
+    <ImageSlider
+      beforeImage={imgAntes.src}
+      afterImage={imgDespues.src}
+      beforeLabel="Antes"
+      afterLabel="Después"
     />
   </div>
 
   {/* Rejilla Perimetral Sagrada de Figma: Contenedor global de alineación horizontal y posicionamiento relativo */}
   <div class="mx-auto max-w-[1920px] px-6 md:px-12 lg:px-[128px] relative mt-24">
-    
+
     {/* Navegación flotante lateral fija a la derecha leyendo las 8 estaciones metodológicas */}
     <ReadingProgress steps={caseStudySteps} />
 
@@ -104,7 +109,7 @@ const caseStudySteps = [
           <p>
             A diferencia del desarrollo clásico, el entorno cerrado de SIMATIC WinCC 8.1 impuso limitantes que redefinieron mi estrategia de diseño. Cada decisión requirió un balance entre costo/beneficio:
           </p>
-          
+
           <ul>
             <li>
               <strong>Lo técnicamente inviable:</strong> Se descartó la implementación de un buscador predictivo global. También se descartó que la barra de menú lateral fuera colapsable, debido al costo prohibitivo en tiempos de desarrollo y recursos.
@@ -123,7 +128,7 @@ const caseStudySteps = [
           <p>
             Debido a cláusulas contractuales con el cliente final y estrictos protocolos de seguridad industrial, no se otorgó acceso directo al personal del área de monitoreo. Para subsanar esto, la fase de descubrimiento se basó en:
           </p>
-          
+
           <ol>
             <li>
               <strong>Mapeo con expertos (SMEs):</strong>  Entrevistas técnicas en profundidad con ingenieros SCADA, ingenieros estructurales e ingenieros de sitio para entender cómo decodificaban las variables físicas en condiciones reales y cómo deberían mostrarse en pantalla para que operadores con perfiles junior o especializados pudieran interpretar de manera fácil.
@@ -158,10 +163,10 @@ const caseStudySteps = [
           <p>
             Para mitigar la desorientación del usuario y resolver el cambio de alcance de los stakeholders, reestructuré el ecosistema dividiendo la estrategia de información en dos grandes pilares funcionales.
           </p>
-          
+
           <ol>
             <li>
-              <strong>Arquitectura de información y navegación global de la aplicación</strong> 
+              <strong>Arquitectura de información y navegación global de la aplicación</strong>
               <p>Este bloque resolvió la inconsistencia modular de todo el software y la transición entre pantallas, atacando la experiencia desde la puerta de entrada:</p>
               <ul>
                 <li><strong>Estandarización de módulos existentes:</strong> Definí layouts consistentes e iconografía unificada para que la navegación dentro del sistema se rigiera por las mismas reglas espaciales y jerárquicas.</li>
@@ -227,12 +232,12 @@ const caseStudySteps = [
           <p>
             Mi aportación final en el proyecto no se limitó a resolver el aspecto visual del Tren Interurbano; busqué dejar una base de gobernanza de diseño duradero para la organización y futuros proyectos de monitoreo estructural.
           </p>
-          
-          {/* ========================================================= 
+
+          {/* =========================================================
               GRUPO DE MÉTRICAS (3 columnas)
               ========================================================= */}
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full my-10">
-            
+
             {/* Tarjeta 1 */}
             <MetricCard
               label="Cimientos del Design System"

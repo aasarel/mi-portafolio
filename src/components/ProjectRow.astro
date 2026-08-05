@@ -34,7 +34,7 @@ interface Props {
   id?: string;                          // ID único del proyecto — aísla la lógica JS entre rows
   title: string;                        // Título de impacto del caso de estudio
   description: string;                  // Resumen editorial (2–3 líneas)
-  link: string;                         // Ruta interna al detalle del caso (ej. "/moses-scada")
+  link: string;                         // Ruta interna al detalle del caso (ej. "/casos-de-estudio/tren-mexico-toluca")
   platform: string;                     // Herramienta o entorno principal (ej. "SIMATIC WinCC 8.1")
   images: Array<ImageMetadata | string>; // 1–N imágenes; ImageMetadata genera srcset automático
   activeIndex?: number;                 // Slide inicial (reservado; el carrusel siempre arranca en 0)
